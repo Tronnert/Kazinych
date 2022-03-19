@@ -7,14 +7,60 @@
           href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
           crossorigin="anonymous">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <title>{{title}}</title>
 </head>
 <body>
 <header>
-    <nav class="navbar navbar-light bg-light">
-        <a class="navbar-brand" href="#">Наше приложение</a>
+    <!--    <nav class="navbar fixed-top navbar-light bg-light">-->
+    <!--        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">-->
+    <!--            <span class="navbar-toggler-icon"></span>-->
+    <!--        </button>-->
+    <!--        <div class="collapse navbar-collapse" id="navbarTogglerDemo01">-->
+    <!--            <a class="navbar-brand" href="#">Hidden brand</a>-->
+    <!--            <ul class="navbar-nav mr-auto mt-2 mt-lg-0">-->
+    <!--                <li class="nav-item">-->
+    <!--                    <a class="navbar-brand" href="/">Главная</a>-->
+    <!--                </li>-->
+    <!--            </ul>-->
+    <!--            <a class="navbar-brand" id="register_link_button" href="/register">Регистрация</a>-->
+    <!--        </div>-->
+    <!--    </nav>-->
+    <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
+        <!--  <a class="navbar-brand" href="#"></a>-->
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02"
+                aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+            <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+                <li class="nav-item active">
+                    <a class="nav-link" href="/">Главная</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav my-2 my-lg-0">
+                {% if current_user.is_authenticated %}
+                    <li class="nav-item active">
+                        <a class="nav-link" href="/logout">Выйти</a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="/user">{{ current_user.name }} <img src="{{ url_for('static', filename='img/' + current_user.image) }}" width="30" height="30" class="d-inline-block align-top"></a>
+                    </li>
+                {% else %}
+                    <li class="nav-item active">
+                        <a class="nav-link" href="/register">Регистрация</a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="/login">Вход</a>
+                    </li>
+                {% endif %}
+            </ul>
+            <!--    <form class="form-inline my-2 my-lg-0">-->
+            <!--      <input class="form-control mr-sm-2" type="search" placeholder="Search">-->
+            <!--      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>-->
+            <!--    </form>-->
+        </div>
     </nav>
 </header>
 <!-- Begin page content -->
