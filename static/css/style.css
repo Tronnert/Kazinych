@@ -1,5 +1,6 @@
-h1 {
-  color: red;
+/* Main content */
+.main {
+  margin-top: 30px; /* Add a top margin to avoid content overlay */
 }
 form.login_form {
     margin-left: auto;
