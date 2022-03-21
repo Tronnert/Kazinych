@@ -2,21 +2,25 @@ from flask import Flask
 from data import db_session
 from data.users import User
 from forms.user import RegisterForm
-from flask import render_template
-from flask import redirect
-from flask_login import LoginManager, login_user, login_required, logout_user
+from flask import render_template, redirect, make_response, jsonify
+from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from forms.user import LoginForm
+from requests import get, post
+from api import user_api
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
 login_manager = LoginManager()
+app.register_blueprint(user_api.blueprint)
 login_manager.init_app(app)
+# current_user = current_user
 
 
 @login_manager.user_loader
 def load_user(user_id):
     db_sess = db_session.create_session()
     return db_sess.query(User).get(user_id)
+
 
 
 @app.route('/')
@@ -45,7 +49,8 @@ def reqister():
         user.set_password(form.password.data)
         db_sess.add(user)
         db_sess.commit()
-        return redirect('/login')
+        login_user(user, remember=form.remember_me.data)
+        return redirect('/')
     return render_template('register.html', title='Регистрация', form=form)
 
 
@@ -71,8 +76,25 @@ def logout():
     return redirect("/")
 
 
+# @app.route('/game')
+# @login_required
+# def first_game():
+#     return post('http://localhost:8080/api/user', json={'bet': 100, 'game_name': 'first', 'id': current_user.id, 'password': current_user.hashed_password}).json()
+
+
+@app.route('/profile')
+def profile():
+    return render_template('profile.html', title='Профиль')
+
+
+@app.errorhandler(404)
+def not_found(error):
+    return make_response(jsonify({'error': 'Not found'}), 404)
+
+
 def main():
-    db_session.global_init("db/blogs.db")
+    db_session.global_init("db/casino.db")
+
     app.run(port=8080, host='127.0.0.1')
 
 
