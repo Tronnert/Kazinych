@@ -25,10 +25,9 @@ def balance_update():
     if current_user.hashed_password != request.json['password']:
         return jsonify({'error': 'Wrong password'})
     current_user.balance -= int(request.json['bet'])
-    ch = choice(games_dict[request.json['game_name']])
-    win = int(request.json['bet']) * ch
+    win, ch = games_dict[request.json['game_name']].get_win(request.json)
     current_user.balance += win
-    new_note = BalanceChanges(game_name=request.json['game_name'], content='ok', change=win, user=current_user)
+    new_note = BalanceChanges(game_name=request.json['game_name'], content='ok', change=win - int(request.json['bet']), user=current_user)
     current_user.balance_changes_rel.append(new_note)
     db_sess.commit()
     return jsonify({'win': win, 'choice': ch, 'success': 'ok'})

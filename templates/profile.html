@@ -1,22 +1,52 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container d-flex justify-content-center mt-5">
-    <div class="card">
-        <div class="top-container"><img src="{{ url_for('static', filename='img/' + current_user.image) }}" class="img-fluid profile-image"
-                                        width="70">
-            <div class="ml-3">
-                <h5 class="name">{{ current_user.name }}</h5>
-                <p class="mail">{{ current_user.email }}</p>
+<div class="container d-flex justify-content-start mt-5">
+    <div class="container justify-content-center mt-5 border-left border-right">
+        <div class="card">
+            <div class="top-container">
+                <img src="{{ url_for('static', filename='img/' + current_user.image) }}"
+                     class="img-fluid profile-image"
+                     width="70">
+                <div class="ml-3">
+                    <h5 class="name">{{ current_user.name }}</h5>
+                    <p class="mail">{{ current_user.email }}</p>
+                </div>
+            </div>
+            <div class="middle-container d-flex justify-content-between align-items-center mt-3 p-2">
+                <div class="dollar-div px-3">
+                    <div class="round-div"><i class="fa fa-dollar dollar"></i></div>
+                </div>
+                <div class="d-flex flex-column text-right mr-2"><span class="current-balance">Текущий баланс</span>
+                    <span class="amount"><span class="dollar-sign">$</span>{{ current_user.balance }}</span></div>
+            </div>
+            <form method="POST" enctype="multipart/form-data">
+                <div class="d-flex justify-content-between align-items-center mt-3 p-2">
+                    <p>
+                        {{ form.file(type="file") }}<br>
+                        {% for error in form.file.errors %}
+                    <div class="alert alert-danger" role="alert">
+                        {{ error }}
+                    </div>
+                    {% endfor %}
+                    </p>
+                    <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
+                    <div>{{ message }}</div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="container justify-content-center mt-5 border-left border-right">
+        <h2>Изменения баланса</h2>
+        {% for item in current_user.balance_changes_rel %}
+        <div class="second py-2 px-2">
+            <div class="container d-flex justify-content-between">
+                <span class="text1">Название игры: {{ item.game_name }}</span>
+                <span class="text1">Изменение баланса: {{ item.change }}</span>
+                <span class="text1">Дата: {{ item.date.strftime("%H:%M %d.%m.%y") }}</span>
             </div>
         </div>
-        <div class="middle-container d-flex justify-content-between align-items-center mt-3 p-2">
-            <div class="dollar-div px-3">
-                <div class="round-div"><i class="fa fa-dollar dollar"></i></div>
-            </div>
-            <div class="d-flex flex-column text-right mr-2"><span class="current-balance">Current Balance</span> <span
-                    class="amount"><span class="dollar-sign">$</span>{{ current_user.balance }}</span></div>
-        </div>
+        {% endfor %}
     </div>
 </div>
 <script type='text/javascript'
