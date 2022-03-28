@@ -2,25 +2,28 @@ from flask import Flask
 from data import db_session
 from data.users import User
 from forms.user import RegisterForm
-from flask import render_template, redirect, make_response, jsonify
+from flask import render_template, redirect, make_response, jsonify, request
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
-from forms.user import LoginForm
+from forms.user import LoginForm, UploadForm
 from requests import get, post
 from api import user_api
+from werkzeug.utils import secure_filename
+import os
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
+app.config['MAX_CONTENT_LENGTH'] = 1024 * 1024
+app.config['UPLOAD_EXTENSIONS'] = ['.jpg', '.png', '.gif']
+app.config['UPLOAD_PATH'] = 'static/img'
 login_manager = LoginManager()
 app.register_blueprint(user_api.blueprint)
 login_manager.init_app(app)
-# current_user = current_user
 
 
 @login_manager.user_loader
 def load_user(user_id):
     db_sess = db_session.create_session()
     return db_sess.query(User).get(user_id)
-
 
 
 @app.route('/')
@@ -82,9 +85,22 @@ def logout():
 #     return post('http://localhost:8080/api/user', json={'bet': 100, 'game_name': 'first', 'id': current_user.id, 'password': current_user.hashed_password}).json()
 
 
-@app.route('/profile')
+@app.route('/profile', methods=['GET', 'POST'])
 def profile():
-    return render_template('profile.html', title='Профиль')
+    form = UploadForm()
+    if request.method == 'POST':
+        uploaded_file = request.files['file']
+        filename = secure_filename(uploaded_file.filename)
+        if filename != '':
+            file_ext = os.path.splitext(filename)[1]
+            if file_ext in app.config['UPLOAD_EXTENSIONS']:
+                uploaded_file.save(os.path.join(app.config['UPLOAD_PATH'], filename))
+                db_sess = db_session.create_session()
+                user = db_sess.query(User).filter(User.id == current_user.id).first()
+                user.image = filename
+                db_sess.commit()
+                return redirect("/profile")
+    return render_template('profile.html', title='Профиль', form=form)
 
 
 @app.errorhandler(404)

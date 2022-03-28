@@ -34,7 +34,7 @@
                         <a class="nav-link" href="/logout">Выйти</a>
                     </li>
                     <li class="nav-item active">
-                        <a class="nav-link" href="/profile">{{ current_user.name }} <img src="{{ url_for('static', filename='img/' + current_user.image) }}" width="30" height="30" class="d-inline-block align-top"></a>
+                        <a class="nav-link" href="/profile">{{ current_user.name }} <img src="{{ url_for('static', filename='img/' + current_user.image) }}" width="30" height="30" class="d-inline-block profile-image"></a>
                     </li>
                 {% else %}
                     <li class="nav-item active">

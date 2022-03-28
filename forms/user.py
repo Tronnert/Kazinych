@@ -3,6 +3,7 @@ from wtforms import PasswordField, StringField, TextAreaField, SubmitField, Bool
 # from wtforms.fields.html5 import EmailField
 from wtforms.validators import DataRequired
 from wtforms.fields import EmailField
+from flask_wtf.file import FileField
 
 
 class RegisterForm(FlaskForm):
@@ -20,3 +21,10 @@ class LoginForm(FlaskForm):
     password = PasswordField('Пароль', validators=[DataRequired()])
     remember_me = BooleanField('Запомнить меня')
     submit = SubmitField('Войти')
+
+
+
+
+class UploadForm(FlaskForm):
+    file = FileField('File')
+    submit = SubmitField('Submit')
