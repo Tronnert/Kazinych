@@ -103,6 +103,11 @@ def profile():
     return render_template('profile.html', title='Профиль', form=form)
 
 
+@app.route('/roulette')
+def roulette():
+    return render_template('roulette.html', title='Рулетка', current_user=current_user)
+
+
 @app.errorhandler(404)
 def not_found(error):
     return make_response(jsonify({'error': 'Not found'}), 404)
@@ -110,6 +115,7 @@ def not_found(error):
 
 def main():
     db_session.global_init("db/casino.db")
+    app.register_blueprint(user_api.blueprint)
     port = int(os.environ.get("PORT", 5000))
     app.run(host='0.0.0.0', port=port)
 
