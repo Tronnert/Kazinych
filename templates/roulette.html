@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% block content %}
+    <div id="fucking_shit">
+    <div id="roulettemain">
+        <img src="static/img/arrow.png" style="display: inline-block;">
+        <img src="static/img/roulette.png" id="roulette" style="width: 100%;">
+        <div style="height: 10px;"></div>
+        <div>
+            <label style="display: inline-block;">Введите ставку</label>
+            <input type="number" id="roulettebet1" name="bet" value="0" style="display: inline-block;">
+        </div>
+        <div>
+            <label style="display: inline-block;">На что ставите?</label>
+            <input type="number" id="roulettebet2" name="number" value="0" style="display: inline-block;">
+        </div>
+        <div style="text-align: center;">
+        <button onclick="button_click()" id="roulettebutton" style="display: inline-block; width: 100%;">Крутите барабан!</button>
+        <p style="display: inline-block; padding: auto;" id="winornotwin"></p>
+        {% if current_user.is_authenticated %}
+        <script>
+        window.user = {
+            cur_us_id: {{current_user.id}},
+            cur_us_hash_pas: "{{current_user.hashed_password}}",
+            balance: {{current_user.balance}}
+        }
+        document.getElementById('roulettebutton').disabled = false;
+        </script>
+        {% else %}
+        <script>
+        window.user = {
+            cur_us_id: null,
+            cur_us_hash_pas: null,
+            balance: 0
+        }
+        document.getElementById('roulettebutton').disabled = true;
+        document.getElementById('winornotwin').innerHTML = "Вы не вошли в аккаунт!";
+        </script>
+        {% endif %}
+        <script>
+            window.animation = {
+                    runned: false,
+                    roulette: document.getElementById("roulette"),
+                    angle: 0
+                }
+            async function button_click() {
+                if (window.user.balance >= document.getElementById('roulettebet1').value) {
+                let j = await fetch('/api/user/', {method: 'POST', 
+                                                         headers: {'Content-Type': 'application/json;charset=utf-8'},
+                                                         body: JSON.stringify({"game_name": "roulette", "bet": document.getElementById('roulettebet1').value, 
+                                                         "number": document.getElementById('roulettebet2').value, "id": window.user.cur_us_id, 
+                                                         "password": window.user.cur_us_hash_pas})}).then(function(response) {
+                                                             return response.json();
+                                                         });
+                startrotation(j);
+                }
+                else {
+                    document.getElementById('winornotwin').innerHTML = "Недостаточно средств";
+                }
+            }
+            function startrotation(j) {
+                var lst = [0, 32, 15, 19, 4, 21, 2, 25, 17, 34, 6, 27, 13, 36, 11, 30, 8, 23, 10, 5, 
+                24, 16, 33, 1, 20, 14, 31, 9, 22, 18, 29, 7, 28, 12, 35, 3, 26];
+                let d = {};
+                for (i=0; i<37; i++) {
+                    d[lst[i]] = 360 / 37 * i;
+                }
+                let ax = 0.05;
+                let speed = (ax * 2 * (360 * 6 - d[j['choice']] - 360 / 37 / 2 + (360 - window.animation.angle))) ** 0.5;
+                let flag = true;
+                let id = setInterval(rot, 10);
+                document.getElementById('roulettebutton').disabled = true;
+            function rot() {
+                window.animation.runned = true;
+                if (flag) {
+                    window.animation.angle = (window.animation.angle + speed) % 360;
+                    window.animation.roulette.style.transform = "rotate(" + window.animation.angle + "deg)";
+                    speed -= 0.05;
+                if (speed < 0) {
+                    flag = false;
+                    speed = 0;
+                    document.getElementById('roulettebutton').disabled = false;
+                    if (j['win'] != 0) {
+                        document.getElementById('winornotwin').innerHTML = "Вы выиграли!";
+                    }
+                    else {
+                        document.getElementById('winornotwin').innerHTML = "Вы проиграли!";
+                    }
+                    }
+                }
+            }
+            }
+            function err() {
+                return 'Ошибка'
+            }
+        </script>
+        </div>
+</div>
+</div>
+{% endblock %}

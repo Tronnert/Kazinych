@@ -103,6 +103,11 @@ def profile():
     return render_template('profile.html', title='Профиль', form=form)
 
 
+@app.route('/roulette')
+def roulette():
+    return render_template('roulette.html', title='Рулетка', current_user=current_user)
+
+
 @app.errorhandler(404)
 def not_found(error):
     return make_response(jsonify({'error': 'Not found'}), 404)

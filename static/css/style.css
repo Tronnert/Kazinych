@@ -110,3 +110,17 @@ body {
 .second:hover {
     border: 1px solid #5957f9
 }
+#roulettemain {
+    text-align: center;
+    margin-top: 30px;
+}
+#fucking_shit {
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
