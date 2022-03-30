@@ -15,7 +15,7 @@
         </div>
         <div style="text-align: center;">
         <button onclick="button_click()" id="roulettebutton" style="display: inline-block; width: 100%;">Крутите барабан!</button>
-        <label style="display: inline-block;" id="winornotwin"></label>
+        <p style="display: inline-block; padding: auto;" id="winornotwin"></p>
         {% if current_user.is_authenticated %}
         <script>
         window.user = {
@@ -54,7 +54,7 @@
                 startrotation(j);
                 }
                 else {
-                    document.getElementById('winornotwin').innerHTML = "На счету недостаточно средств!";
+                    document.getElementById('winornotwin').innerHTML = "Недостаточно средств";
                 }
             }
             function startrotation(j) {
