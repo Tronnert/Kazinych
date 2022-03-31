@@ -5,7 +5,7 @@ from forms.user import RegisterForm
 from flask import render_template, redirect, make_response, jsonify, request
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from forms.user import LoginForm, UploadForm
-from requests import get, post
+import requests
 from api import user_api
 from werkzeug.utils import secure_filename
 import os
@@ -79,6 +79,37 @@ def logout():
     return redirect("/")
 
 
+def make_map_image():
+    toponym_to_find = "Кипр"
+    geocoder_api_server = "http://geocode-maps.yandex.ru/1.x/"
+    geocoder_params = {
+        "apikey": "40d1649f-0493-4b70-98ba-98533de7710b",
+        "geocode": toponym_to_find,
+        "format": "json"}
+    response = requests.get(geocoder_api_server, params=geocoder_params)
+    json_response = response.json()
+    toponym = json_response["response"]["GeoObjectCollection"][
+        "featureMember"][0]["GeoObject"]
+    toponym_coodrinates = toponym["Point"]["pos"]
+    toponym_longitude, toponym_lattitude = toponym_coodrinates.split(" ")
+    delta = "1.5"
+    map_params = {
+        "ll": ",".join([toponym_longitude, toponym_lattitude]),
+        "spn": ",".join([delta, delta]),
+        "l": "map"
+    }
+    map_api_server = "http://static-maps.yandex.ru/1.x/"
+    response = requests.get(map_api_server, params=map_params)
+    map_file = "static/img/map.png"
+    with open(map_file, "wb") as file:
+        file.write(response.content)
+
+
+@app.route('/about')
+def about():
+    return render_template('about.html', title='О нас')
+
+
 # @app.route('/game')
 # @login_required
 # def first_game():
@@ -114,9 +145,11 @@ def not_found(error):
 
 
 def main():
+    make_map_image()
     db_session.global_init("db/casino.db")
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host='0.0.0.0', port=port)
+    # port = int(os.environ.get("PORT", 5000))
+    # app.run(host='0.0.0.0', port=port)
+    app.run(port=8080, host='127.0.0.1')
 
 
 if __name__ == '__main__':
