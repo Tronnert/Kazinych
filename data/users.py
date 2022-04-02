@@ -17,7 +17,7 @@ class User(SqlAlchemyBase, UserMixin, SerializerMixin):
     email = sqlalchemy.Column(sqlalchemy.String, index=True, unique=True, nullable=True)
     hashed_password = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     created_date = sqlalchemy.Column(sqlalchemy.DateTime, default=datetime.datetime.now)
-    balance = sqlalchemy.Column(sqlalchemy.Integer, nullable=True, default=0)
+    balance = sqlalchemy.Column(sqlalchemy.Integer, nullable=True, default=10)
     image = sqlalchemy.Column(sqlalchemy.String, nullable=True, default="empty_image.png")
     balance_changes_rel = orm.relation("BalanceChanges", back_populates='user')
 

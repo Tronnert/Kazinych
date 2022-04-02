@@ -100,6 +100,24 @@ body {
     font-weight: bold
 }
 
+.amount-profile {
+    color: #5957f9;
+    font-size: 16px;
+    font-weight: bold;
+    background-color: #fff;;
+    border-radius: 6px;
+    padding-left:6px;
+    padding-top:1px;
+    padding-right:6px;
+    padding-bottom:1px
+}
+
+.dollar-sign-profile {
+    font-size: 16px;
+    color: #343a40;
+    font-weight: bold
+}
+
 .second {
     width: 640px;
     background-color: white;

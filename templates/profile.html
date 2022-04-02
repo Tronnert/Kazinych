@@ -18,7 +18,8 @@
                     <div class="round-div"><i class="fa fa-dollar dollar"></i></div>
                 </div>
                 <div class="d-flex flex-column text-right mr-2"><span class="current-balance">Текущий баланс</span>
-                    <span class="amount"><span class="dollar-sign">$</span>{{ current_user.balance }}</span></div>
+                    <span class="amount"><span class="dollar-sign">$</span><span id="card_balance">{{ current_user.balance }}</span></span>
+                </div>
             </div>
             <form method="POST" enctype="multipart/form-data">
                 <div class="d-flex justify-content-between align-items-center mt-3 p-2">
@@ -34,11 +35,15 @@
                     <div>{{ message }}</div>
                 </div>
             </form>
+            <div class="d-flex justify-content-between align-items-center mt-3 p-2">
+                <button onclick="button_click_profile(3)">Stonks</button>
+                <button onclick="button_click_profile(-3)">Not stonks</button>
+            </div>
         </div>
     </div>
     <div class="container justify-content-center mt-5 border-left border-right">
         <h2>Изменения баланса</h2>
-        {% for item in current_user.balance_changes_rel %}
+        {% for item in current_user.balance_changes_rel|reverse %}
         <div class="second py-2 px-2">
             <div class="container d-flex justify-content-between">
                 <span class="text1">Название игры: {{ item.game_name }}</span>
@@ -48,7 +53,31 @@
         </div>
         {% endfor %}
     </div>
+    <div id="myPopoverContent" style="display:none">
+        <p>This is the body of Popover</p>
+        <a onclick="button_click_profile()" href="#">aaaa</a>
+    </div>
 </div>
+<script>
+document.getElementById('card_balance').innerHTML = window.user.balance;
+async function button_click_profile(change) {
+    if (window.user.balance + change < 0) {
+        return "ЭЭЭЭ";
+    }
+    else {
+        let j = await fetch('/api/cheat/', {method: 'POST',
+            headers: {'Content-Type': 'application/json;charset=utf-8'},
+            body: JSON.stringify({"change": change, "id": window.user.cur_us_id,
+            "password": window.user.cur_us_hash_pas})}).then(function(response) {
+                return response.json();
+            });
+        window.user.balance = window.user.balance + change;
+        document.getElementById('nav_balance').innerHTML = window.user.balance;
+        document.getElementById('card_balance').innerHTML = window.user.balance;
+    }
+}
+
+</script>
 <script type='text/javascript'
         src='https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js'></script>
 <script type='text/javascript' src=''></script>

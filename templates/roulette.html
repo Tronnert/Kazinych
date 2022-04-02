@@ -50,7 +50,7 @@
                     document.getElementById('winornotwin').innerHTML = "Недостаточно средств";
                 }
                 else if (document.getElementById('roulettebet1').value <= window.user.balance){
-                    let j = await fetch('/api/user/', {method: 'POST', 
+                    let j = await fetch('/api/game/', {method: 'POST',
                                                          headers: {'Content-Type': 'application/json;charset=utf-8'},
                                                          body: JSON.stringify({"game_name": "roulette", "bet": document.getElementById('roulettebet1').value, 
                                                          "number": document.getElementById('roulettebet2').value, "id": window.user.cur_us_id, 

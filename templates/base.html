@@ -36,29 +36,35 @@
             </ul>
             <ul class="navbar-nav my-2 my-lg-0">
                 {% if current_user.is_authenticated %}
-                    <li class="nav-item active">
-                        <a class="nav-link" href="/logout">Выйти</a>
-                    </li>
-                    <li class="nav-item active">
-                        <a class="nav-link" href="/profile">{{ current_user.name }} <img src="{{ url_for('static', filename='img/' + current_user.image) }}" width="30" height="30" class="d-inline-block profile-image"></a>
-                    </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="/logout">Выйти</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="/profile"><span class="amount-profile"><span
+                            class="dollar-sign-profile">$</span><span id="nav_balance">{{ current_user.balance }}</span></span> {{
+                        current_user.name }} <img src="{{ url_for('static', filename='img/' + current_user.image) }}"
+                                                  width="30" height="30" class="d-inline-block profile-image"></a>
+                </li>
                 {% else %}
-                    <li class="nav-item active">
-                        <a class="nav-link" href="/register">Регистрация</a>
-                    </li>
-                    <li class="nav-item active">
-                        <a class="nav-link" href="/login">Вход</a>
-                    </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="/register">Регистрация</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="/login">Вход</a>
+                </li>
                 {% endif %}
             </ul>
-            <!--    <form class="form-inline my-2 my-lg-0">-->
-            <!--      <input class="form-control mr-sm-2" type="search" placeholder="Search">-->
-            <!--      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>-->
-            <!--    </form>-->
         </div>
     </nav>
 </header>
-<!-- Begin page content -->
+<script>
+        window.user = {
+            cur_us_id: {{current_user.id}},
+            cur_us_hash_pas: "{{current_user.hashed_password}}",
+            balance: {{current_user.balance}}
+        }
+        document.getElementById('nav_balance').innerHTML = window.user.balance;
+</script>
 <main role="main" class="container">
     {% block content %}{% endblock %}
 </main>
