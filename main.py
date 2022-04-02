@@ -146,6 +146,8 @@ def not_found(error):
 
 def main():
     make_map_image()
+    if not os.path.exists("db"):
+        os.mkdir("db")
     db_session.global_init("db/casino.db")
     # port = int(os.environ.get("PORT", 5000))
     # app.run(host='0.0.0.0', port=port)
