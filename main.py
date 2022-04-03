@@ -138,6 +138,9 @@ def profile():
 def roulette():
     return render_template('roulette.html', title='Рулетка', current_user=current_user)
 
+@app.route('/cyber_roulette')
+def roulette2():
+    return render_template('roulette2.html', title='Рулетка', current_user=current_user)
 
 @app.errorhandler(404)
 def not_found(error):

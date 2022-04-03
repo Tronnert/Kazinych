@@ -142,3 +142,14 @@ body {
     width: 100%;
     height: 100%;
 }
+#fucking_shit_cyber {
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #525252;
+}
