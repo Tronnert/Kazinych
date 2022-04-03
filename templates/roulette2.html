@@ -1,22 +1,23 @@
 {% extends "base.html" %}
 {% block content %}
-    <div id="fucking_shit">
+    <div id="fucking_shit_cyber">
     <div id="roulettemain">
-        <img src="static/img/arrow.png" style="display: inline-block;">
+        <img src="static/img/cyber_arrow.png" style="display: inline-block;">
         <div style="height: 10px;"></div>
-        <img src="static/img/roulette.png" id="roulette" style="width: 100%;">
+        <img src="static/img/roulette2.png" id="roulette" style="width: 100%;">
         <div style="height: 10px;"></div>
         <div>
-            <label style="display: inline-block;">Введите ставку</label>
-            <input type="number" id="roulettebet1" name="bet" value="0" style="display: inline-block;">
+            <label style="display: inline-block; color: #de5ded;">Введите ставку</label>
+            <input type="number" id="roulettebet1" name="bet" value="0" style="display: inline-block; background-color: #929292;">
         </div>
         <div>
-            <label style="display: inline-block;">На что ставите?</label>
-            <input type="number" id="roulettebet2" name="number" value="0" style="display: inline-block;">
+            <label style="display: inline-block; color: #de5ded;">На что ставите?</label>
+            <input type="number" id="roulettebet2" name="number" value="0" style="display: inline-block; background-color: #929292;">
         </div>
         <div style="text-align: center;">
-        <button onclick="button_click()" id="roulettebutton" style="display: inline-block; width: 100%;">Крутите барабан!</button>
-        <p style="display: inline-block; padding: auto;" id="winornotwin"></p>
+        <button onclick="button_click()" id="roulettebutton" style="display: inline-block; width: 100%; 
+        background-color: #929292; color: #8b009b;">Крутите барабан!</button>
+        <p style="display: inline-block; padding: auto; color: #de5ded;" id="winornotwin"></p>
         {% if current_user.is_authenticated %}
         <script>
         window.user = {
@@ -51,25 +52,25 @@
                     document.getElementById('winornotwin').innerHTML = "Недостаточно средств";
                 }
                 else if (document.getElementById('roulettebet1').value <= window.user.balance){
-                    let j = await fetch('/api/game/', {method: 'POST',
+                    let j = await fetch('/api/game/', {method: 'POST', 
                                                          headers: {'Content-Type': 'application/json;charset=utf-8'},
-                                                         body: JSON.stringify({"game_name": "roulette", "bet": document.getElementById('roulettebet1').value, 
+                                                         body: JSON.stringify({"game_name": "cyber_roulette", "bet": document.getElementById('roulettebet1').value, 
                                                          "number": document.getElementById('roulettebet2').value, "id": window.user.cur_us_id, 
                                                          "password": window.user.cur_us_hash_pas})}).then(function(response) {
                                                              return response.json();
                                                          });
+                console.log()
                 startrotation(j);
                 }
             }
             function startrotation(j) {
-                var lst = [0, 32, 15, 19, 4, 21, 2, 25, 17, 34, 6, 27, 13, 36, 11, 30, 8, 23, 10, 5, 
-                24, 16, 33, 1, 20, 14, 31, 9, 22, 18, 29, 7, 28, 12, 35, 3, 26];
+                var lst = [1, 2, 3, 4, 5, 6, 7, 8];
                 let d = {};
-                for (i=0; i<37; i++) {
-                    d[lst[i]] = 360 / 37 * i;
+                for (i=0; i<lst.length; i++) {
+                    d[lst[i]] = 360 / lst.length * i;
                 }
                 let ax = 0.05;
-                let speed = (ax * 2 * (360 * 6 - d[j['choice']] - 360 / 37 / 2 + (360 - window.animation.angle))) ** 0.5;
+                let speed = (ax * 2 * (360 * 6 - d[j['choice']] - 360 / lst.length / 2 + (360 - window.animation.angle))) ** 0.5;
                 let flag = true;
                 let id = setInterval(rot, 10);
                 document.getElementById('roulettebutton').disabled = true;
@@ -83,6 +84,7 @@
                     flag = false;
                     speed = 0;
                     document.getElementById('roulettebutton').disabled = false;
+                    console.log(document.getElementById('roulettebet2').value);
                     if (Number(j['choice']) == document.getElementById('roulettebet2').value) {
                         document.getElementById('winornotwin').innerHTML = "Вы выиграли!";
                     }
