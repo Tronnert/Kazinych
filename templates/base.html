@@ -3,14 +3,18 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet"
-          href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
-          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
-          crossorigin="anonymous">
+<!--    <link rel="stylesheet"-->
+<!--          href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"-->
+<!--          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"-->
+<!--          crossorigin="anonymous">-->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <link href='https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css' rel='stylesheet'>
+<!--    <link href='https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css' rel='stylesheet'>-->
     <link href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.0.3/css/font-awesome.css' rel='stylesheet'>
     <script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
     <title>{{title}}</title>
 </head>
 <body>
@@ -41,7 +45,8 @@
                 </li>
                 <li class="nav-item active">
                     <a class="nav-link" href="/profile"><span class="amount-profile"><span
-                            class="dollar-sign-profile">$</span><span id="nav_balance">{{ current_user.balance }}</span></span> {{
+                            class="dollar-sign-profile">$</span><span id="nav_balance">{{ current_user.balance }}</span></span>
+                        {{
                         current_user.name }} <img src="{{ url_for('static', filename='img/' + current_user.image) }}"
                                                   width="30" height="30" class="d-inline-block profile-image"></a>
                 </li>
@@ -64,6 +69,7 @@
             balance: {{current_user.balance}}
         }
         document.getElementById('nav_balance').innerHTML = window.user.balance;
+
 </script>
 <main role="main" class="container">
     {% block content %}{% endblock %}
