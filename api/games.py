@@ -21,6 +21,7 @@ class Roulette(Game):
             win = int(json['bet'])
         return win, ch
 
+
 class Cyber_Roulette(Game):
     def __init__(self, *args, **kwargs):
         pass
