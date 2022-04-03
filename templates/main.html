@@ -1,3 +1,70 @@
 {% extends "base.html" %}
 {% block content %}
+<div class="container d-flex justify-content-start mt-5">
+    <div class="container d-flex justify-content-center mt-5" style="width: 500px;">
+        <div id="demo" class="carousel slide" data-ride="carousel">
+<!--            <ul class="carousel-indicators" style="z-index:1">-->
+<!--                <li data-target="#demo" data-slide-to="0" class="active"></li>-->
+<!--                <li data-target="#demo" data-slide-to="1"></li>-->
+<!--                <li data-target="#demo" data-slide-to="2"></li>-->
+<!--            </ul>-->
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <a href="/roulette">
+                        <img src="{{ url_for('static', filename='img/roulette_for_car.png') }}" alt="Los Angeles">
+                    </a>
+                    <div class="carousel-caption">
+                        <h3>Рулетка обыкновенная</h3>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <img src="{{ url_for('static', filename='img/roulette_for_car.png') }}" alt="Chicago">
+                    <div class="carousel-caption">
+                        <h3>Заготовка</h3>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <img src="{{ url_for('static', filename='img/roulette_for_car.png') }}" alt="New York">
+                    <div class="carousel-caption">
+                        <h3>Заготовка</h3>
+                    </div>
+                </div>
+            </div>
+            <a class="carousel-control-prev" href="#demo" data-slide="prev">
+                <span class="carousel-control-prev-icon"></span>
+            </a>
+            <a class="carousel-control-next" href="#demo" data-slide="next">
+                <span class="carousel-control-next-icon"></span>
+            </a>
+        </div>
+    </div>
+</div>
+<!--<div class="container">-->
+<!--    <div class="container d-flex justify-content-center mt-5" style="width: 500px;">-->
+<!--        <div id="demo_2" class="carousel slide" data-ride="carousel">-->
+<!--            <ul class="carousel-indicators" style="z-index:1">-->
+<!--                <li data-target="#demo_2" data-slide-to="0" class="active"></li>-->
+<!--                <li data-target="#demo_2" data-slide-to="1"></li>-->
+<!--                <li data-target="#demo_2" data-slide-to="2"></li>-->
+<!--            </ul>-->
+<!--            <div class="carousel-inner">-->
+<!--                <div class="carousel-item active">-->
+<!--                    <img src="{{ url_for('static', filename='img/roulette_for_car.png') }}" alt="Los Angeles">-->
+<!--                </div>-->
+<!--                <div class="carousel-item">-->
+<!--                    <img src="{{ url_for('static', filename='img/roulette_for_car.png') }}" alt="Chicago">-->
+<!--                </div>-->
+<!--                <div class="carousel-item">-->
+<!--                    <img src="{{ url_for('static', filename='img/roulette_for_car.png') }}" alt="New York">-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <a class="carousel-control-prev" href="#demo_2" data-slide="prev">-->
+<!--                <span class="carousel-control-prev-icon"></span>-->
+<!--            </a>-->
+<!--            <a class="carousel-control-next" href="#demo_2" data-slide="next">-->
+<!--                <span class="carousel-control-next-icon"></span>-->
+<!--            </a>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
 {% endblock %}
