@@ -28,9 +28,11 @@
                 function change_select() {
                 if (document.getElementById('roulette1select').value == 'num') {
                     document.getElementById('strange_div').style.display = 'inline-block';
+                    value = document.getElementById('roulettebet2').value;
                 }
                 else {
                     document.getElementById('strange_div').style.display = 'none';
+                    value = document.getElementById('roulette1select').value;
                 }
             }
             </script>
@@ -64,14 +66,16 @@
                 let max_bet = 36;
                 let min_bet = 0;
                 let game_name = 'roulette';
+                bet = document.getElementById('roulettebet1').value;
+                flag_of_multiple_choice = true;
                 if (document.getElementById('roulette1select').value == 'num') {
+                    document.getElementById('strange_div').style.display = 'inline-block';
                     value = document.getElementById('roulettebet2').value;
                 }
                 else {
+                    document.getElementById('strange_div').style.display = 'none';
                     value = document.getElementById('roulette1select').value;
                 }
-                bet = document.getElementById('roulettebet1').value;
-                flag_of_multiple_choice = true;
             </script>
         </div>
     </div>
