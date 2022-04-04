@@ -9,6 +9,7 @@ import requests
 from api import user_api
 from werkzeug.utils import secure_filename
 import os
+import string
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
@@ -18,6 +19,10 @@ app.config['UPLOAD_PATH'] = 'static/img'
 login_manager = LoginManager()
 app.register_blueprint(user_api.blueprint)
 login_manager.init_app(app)
+
+
+def check_filename(filename):
+    return all(map(lambda x: x in string.ascii_letters + string.digits + ".", filename))
 
 
 @login_manager.user_loader
@@ -119,33 +124,40 @@ def about():
 @app.route('/profile', methods=['GET', 'POST'])
 def profile():
     form = UploadForm()
+    mes = ""
     if request.method == 'POST':
         uploaded_file = request.files['file']
         filename = secure_filename(uploaded_file.filename)
         if filename != '':
             file_ext = os.path.splitext(filename)[1]
             if file_ext in app.config['UPLOAD_EXTENSIONS']:
-                filename = str(current_user.id) + "." + file_ext
-                uploaded_file.save(os.path.join(app.config['UPLOAD_PATH'], filename))
-                db_sess = db_session.create_session()
-                user = db_sess.query(User).filter(User.id == current_user.id).first()
-                user.image = filename
-                db_sess.commit()
-                return redirect("/profile")
-    return render_template('profile.html', title='Профиль', form=form)
+                if check_filename(filename):
+                    filename = str(current_user.id) + "." + file_ext
+                    uploaded_file.save(os.path.join(app.config['UPLOAD_PATH'], filename))
+                    db_sess = db_session.create_session()
+                    user = db_sess.query(User).filter(User.id == current_user.id).first()
+                    user.image = filename
+                    db_sess.commit()
+                    return redirect("/profile")
+                else:
+                    mes = "В имени файла есть некоректные символы"
+    return render_template('profile.html', title='Профиль', form=form, message=mes)
 
 
 @app.route('/roulette')
 def roulette():
     return render_template('roulette.html', title='Рулетка', current_user=current_user)
 
+
 @app.route('/cyber_roulette')
 def roulette2():
     return render_template('roulette2.html', title='Рулетка', current_user=current_user)
 
+
 @app.errorhandler(404)
 def not_found(error):
     return make_response(jsonify({'error': 'Not found'}), 404)
+
 
 @app.route('/cyber_roulette')
 def cyber_roulette():
@@ -157,9 +169,9 @@ def main():
     if not os.path.exists("db"):
         os.mkdir("db")
     db_session.global_init("db/casino.db")
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host='0.0.0.0', port=port)
-    # app.run(port=8080, host='127.0.0.1')
+    # port = int(os.environ.get("PORT", 5000))
+    # app.run(host='0.0.0.0', port=port)
+    app.run(port=8080, host='127.0.0.1')
 
 
 if __name__ == '__main__':

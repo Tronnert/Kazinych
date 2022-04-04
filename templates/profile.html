@@ -43,15 +43,17 @@
     </div>
     <div class="container justify-content-center mt-5 border-left border-right">
         <h2>Изменения баланса</h2>
-        {% for item in current_user.balance_changes_rel|reverse %}
-        <div class="second py-2 px-2">
-            <div class="container d-flex justify-content-between">
-                <span class="text1">Название игры: {{ item.game_name }}</span>
-                <span class="text1">Изменение баланса: {{ item.change }}</span>
-                <span class="text1">Дата: {{ item.date.strftime("%H:%M %d.%m.%y") }}</span>
+        <div id="bal_ch">
+            {% for item in current_user.balance_changes_rel|reverse %}
+            <div class="second py-2 px-2">
+                <div class="container d-flex justify-content-between">
+                    <span class="text1">Название игры: {{ item.game_name }}</span>
+                    <span class="text1">Изменение баланса: {{ item.change }}</span>
+                    <span class="text1">Дата: {{ item.date.strftime("%H:%M %d.%m.%y") }}</span>
+                </div>
             </div>
+            {% endfor %}
         </div>
-        {% endfor %}
     </div>
     <div id="myPopoverContent" style="display:none">
         <p>This is the body of Popover</p>
@@ -74,8 +76,10 @@ async function button_click_profile(change) {
         window.user.balance = window.user.balance + change;
         document.getElementById('nav_balance').innerHTML = window.user.balance;
         document.getElementById('card_balance').innerHTML = window.user.balance;
+        document.getElementById('bal_ch').innerHTML = '<div class="second py-2 px-2"><div class="container d-flex justify-content-between"><span class="text1">Название игры: cheating</span><span class="text1">Изменение баланса: ' + change + '</span><span class="text1">Дата: ' + j['date'] + '</span></div></div>' + document.getElementById('bal_ch').innerHTML;
     }
 }
+
 
 </script>
 <script type='text/javascript'

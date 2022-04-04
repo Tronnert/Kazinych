@@ -6,6 +6,7 @@ from data.balance_changes import BalanceChanges
 from random import choice
 from flask import request
 from .games import games_dict
+import datetime
 
 blueprint = flask.Blueprint(
     'user_api',
@@ -50,4 +51,4 @@ def cheat_balance_update():
     new_note = BalanceChanges(game_name="cheating", content='ok', change=int(request.json['change']), user=current_user)
     current_user.balance_changes_rel.append(new_note)
     db_sess.commit()
-    return jsonify({'success': 'ok'})
+    return jsonify({'success': 'ok', 'date': str(datetime.datetime.now().strftime("%H:%M %d.%m.%y"))})
