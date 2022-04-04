@@ -44,11 +44,14 @@
                     angle: 0
                 }
             async function button_click() {
-                if (document.getElementById('roulettebet1').value < 0) {
-                    document.getElementById('winornotwin').innerHTML = "Отрицательная ставка";
+                if (Number(document.getElementById('roulettebet1').value) < 1) {
+                    document.getElementById('winornotwin').innerHTML = "Ошибка ставки";
                 }
-                else if (document.getElementById('roulettebet1').value > window.user.balance) {
+                else if (Number(document.getElementById('roulettebet1').value) > window.user.balance) {
                     document.getElementById('winornotwin').innerHTML = "Недостаточно средств";
+                }
+                else if (Number(document.getElementById('roulettebet2').value) < 1 || Number(document.getElementById('roulettebet2').value) > 36) {
+                    document.getElementById('winornotwin').innerHTML = "Поставьте на другое число";
                 }
                 else if (document.getElementById('roulettebet1').value <= window.user.balance){
                     let j = await fetch('/api/game/', {method: 'POST',
