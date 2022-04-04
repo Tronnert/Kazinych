@@ -18,7 +18,7 @@ class Roulette(Game):
         win = 0
         ch = random.randint(1, 37)
         if ch == int(json['number']):
-            win = int(json['bet'])
+            win = 2 * int(json['bet'])
         return win, ch
 
 
@@ -30,7 +30,7 @@ class Cyber_Roulette(Game):
         win = 0
         ch = random.randint(1, 8)
         if ch == int(json['number']):
-            win = int(json['bet'])
+            win = 2 * int(json['bet'])
         return win, ch
 
 games_dict = {'roulette': Roulette(), 'cyber_roulette': Cyber_Roulette()}
