@@ -1,14 +1,15 @@
 <!doctype html>
 <html lang="en">
+
 <head>
     <meta charset="utf-16">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<!--    <link rel="stylesheet"-->
-<!--          href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"-->
-<!--          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"-->
-<!--          crossorigin="anonymous">-->
+    <!--    <link rel="stylesheet"-->
+    <!--          href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"-->
+    <!--          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"-->
+    <!--          crossorigin="anonymous">-->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-<!--    <link href='https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css' rel='stylesheet'>-->
+    <!--    <link href='https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css' rel='stylesheet'>-->
     <link href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.0.3/css/font-awesome.css' rel='stylesheet'>
     <script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
@@ -17,65 +18,154 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
     <title>{{title}}</title>
 </head>
-<body>
-<header>
-    <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
-        <!--  <a class="navbar-brand" href="#"></a>-->
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02"
-                aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
 
-        <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
-            <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-                <li class="nav-item active">
-                    <a class="nav-link" href="/">Главная</a>
-                </li>
-                <li class="nav-item active">
-                    <a class="nav-link" href="/roulette">Рулетка</a>
-                </li>
-                <li class="nav-item active">
-                    <a class="nav-link" href="/cyber_roulette">Кибер рулетка</a>
-                </li>
-                <li class="nav-item active">
-                    <a class="nav-link" href="/about">О нас</a>
-                </li>
-            </ul>
-            <ul class="navbar-nav my-2 my-lg-0">
-                {% if current_user.is_authenticated %}
-                <li class="nav-item active">
-                    <a class="nav-link" href="/logout">Выйти</a>
-                </li>
-                <li class="nav-item active">
-                    <a class="nav-link" href="/profile"><span class="amount-profile"><span
-                            class="dollar-sign-profile">$</span><span id="nav_balance">{{ current_user.balance }}</span></span>
-                        {{
-                        current_user.name }} <img src="{{ url_for('static', filename='img/' + current_user.image) }}"
-                                                  width="30" height="30" class="d-inline-block profile-image"></a>
-                </li>
-                {% else %}
-                <li class="nav-item active">
-                    <a class="nav-link" href="/register">Регистрация</a>
-                </li>
-                <li class="nav-item active">
-                    <a class="nav-link" href="/login">Вход</a>
-                </li>
-                {% endif %}
-            </ul>
-        </div>
-    </nav>
-</header>
-<script>
+<body>
+    <header>
+        <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
+            <!--  <a class="navbar-brand" href="#"></a>-->
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02"
+                aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+                <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="/">Главная</a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="/roulette">Рулетка</a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="/cyber_roulette">Кибер рулетка</a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="/about">О нас</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav my-2 my-lg-0">
+                    {% if current_user.is_authenticated %}
+                    <li class="nav-item active">
+                        <a class="nav-link" href="/logout">Выйти</a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="/profile"><span class="amount-profile"><span
+                                    class="dollar-sign-profile">$</span><span id="nav_balance">{{ current_user.balance
+                                    }}</span></span>
+                            {{
+                            current_user.name }} <img
+                                src="{{ url_for('static', filename='img/' + current_user.image) }}" width="30"
+                                height="30" class="d-inline-block profile-image"></a>
+                    </li>
+                    {% else %}
+                    <li class="nav-item active">
+                        <a class="nav-link" href="/register">Регистрация</a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="/login">Вход</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </nav>
+    </header>
+    <script>
         window.user = {
-            cur_us_id: {{current_user.id}},
-            cur_us_hash_pas: "{{current_user.hashed_password}}",
-            balance: {{current_user.balance}}
+            cur_us_id: {{ current_user.id }},
+            cur_us_hash_pas: "{{ current_user.hashed_password }}",
+            balance: {{ current_user.balance }}
         }
         document.getElementById('nav_balance').innerHTML = window.user.balance;
-
-</script>
-<main role="main" class="container">
-    {% block content %}{% endblock %}
-</main>
+        function rot() {
+            window.animation.runned = true;
+            if (flag) {
+                window.animation.angle = (window.animation.angle + speed) % 360;
+                window.animation.roulette.style.transform = "rotate(" + window.animation.angle + "deg)";
+                speed -= 0.05;
+                if (speed < 0) {
+                    flag = false;
+                    speed = 0;
+                    document.getElementById('roulettebutton').disabled = false;
+                    if (Number(j['choice']) == document.getElementById('roulettebet2').value) {
+                        document.getElementById('winornotwin').innerHTML = "Вы выиграли!";
+                        window.user.balance = window.user.balance + Number(j['win']) - Number(j['bet']);
+                        document.getElementById('nav_balance').innerHTML = window.user.balance;
+                    }
+                    else {
+                        window.user.balance = window.user.balance - Number(j['bet']);
+                        document.getElementById('winornotwin').innerHTML = "Вы проиграли!";
+                        document.getElementById('nav_balance').innerHTML = window.user.balance;
+                    }
+                }
+            }
+        }
+        async function button_click() {
+            if (Number(document.getElementById('roulettebet1').value) < 1) {
+                document.getElementById('winornotwin').innerHTML = "Ошибка ставки";
+            }
+            else if (Number(document.getElementById('roulettebet1').value) > window.user.balance) {
+                document.getElementById('winornotwin').innerHTML = "Недостаточно средств";
+            }
+            else if (Number(document.getElementById('roulettebet2').value) < min_bet || Number(document.getElementById('roulettebet2').value) > max_bet) {
+                document.getElementById('winornotwin').innerHTML = "Поставьте на другое число";
+            }
+            else if (document.getElementById('roulettebet1').value <= window.user.balance) {
+                let j = await fetch('/api/game/', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json;charset=utf-8' },
+                    body: JSON.stringify({
+                        "game_name": game_name, "bet": document.getElementById('roulettebet1').value,
+                        "number": document.getElementById('roulettebet2').value, "id": window.user.cur_us_id,
+                        "password": window.user.cur_us_hash_pas
+                    })
+                }).then(function (response) {
+                    return response.json();
+                });
+                startrotation(j, lst);
+                alert(j['choice']);
+            }
+        }
+        function startrotation(j, lst) {
+            let d = {};
+            for (i = 0; i < lst.length; i++) {
+                d[lst[i]] = 360 / lst.length * i;
+            }
+            let ax = 0.05;
+            let speed = (ax * 2 * (360 * 6 - d[j['choice']] - 360 / lst.length / 2 + (360 - window.animation.angle))) ** 0.5;
+            let flag = true;
+            let id = setInterval(rot, 10);
+            document.getElementById('roulettebutton').disabled = true;
+            function rot() {
+                window.animation.runned = true;
+                if (flag) {
+                    window.animation.angle = (window.animation.angle + speed) % 360;
+                    window.animation.roulette.style.transform = "rotate(" + window.animation.angle + "deg)";
+                    speed -= 0.05;
+                    if (speed < 0) {
+                        flag = false;
+                        speed = 0;
+                        document.getElementById('roulettebutton').disabled = false;
+                        if (Number(j['choice']) == document.getElementById('roulettebet2').value) {
+                            document.getElementById('winornotwin').innerHTML = "Вы выиграли!";
+                            window.user.balance = window.user.balance + Number(j['win']) - Number(j['bet']);
+                            document.getElementById('nav_balance').innerHTML = window.user.balance;
+                        }
+                        else {
+                            window.user.balance = window.user.balance - Number(j['bet']);
+                            document.getElementById('winornotwin').innerHTML = "Вы проиграли!";
+                            document.getElementById('nav_balance').innerHTML = window.user.balance;
+                        }
+                    }
+                }
+            }
+        }
+        function err() {
+                    return 'Ошибка'
+                }
+    </script>
+    <main role="main" class="container">
+        {% block content %}{% endblock %}
+    </main>
 </body>
+
 </html>

@@ -16,7 +16,7 @@ class Roulette(Game):
 
     def get_win(self, json):
         win = 0
-        ch = random.randint(1, 37)
+        ch = random.randint(0, 36)
         if ch == int(json['number']):
             win = 2 * int(json['bet'])
         return win, ch
