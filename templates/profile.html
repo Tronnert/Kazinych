@@ -21,6 +21,7 @@
                     <span class="amount"><span class="dollar-sign">$</span><span id="card_balance">{{ current_user.balance }}</span></span>
                 </div>
             </div>
+
             <form method="POST" enctype="multipart/form-data">
                 <div class="d-flex justify-content-between align-items-center mt-3 p-2">
                     <p>
@@ -35,6 +36,7 @@
                     <div>{{ message }}</div>
                 </div>
             </form>
+            <span>В имени файла не должно быть символов киррилицы!</span>
             <div class="d-flex justify-content-between align-items-center mt-3 p-2">
                 <button onclick="button_click_profile(3)">Stonks</button>
                 <button onclick="button_click_profile(-3)">Not stonks</button>

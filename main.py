@@ -21,8 +21,10 @@ app.register_blueprint(user_api.blueprint)
 login_manager.init_app(app)
 
 
-def check_filename(filename):
-    return all(map(lambda x: x in string.ascii_letters + string.digits + ".", filename))
+#
+# def check_filename(filename):
+#     print(filename, all(map(lambda x: x in string.ascii_letters + string.digits + ".", filename)))
+#     return all(map(lambda x: x in string.ascii_letters + string.digits + ".", filename))
 
 
 @login_manager.user_loader
@@ -131,16 +133,13 @@ def profile():
         if filename != '':
             file_ext = os.path.splitext(filename)[1]
             if file_ext in app.config['UPLOAD_EXTENSIONS']:
-                if check_filename(filename):
-                    filename = str(current_user.id) + "." + file_ext
-                    uploaded_file.save(os.path.join(app.config['UPLOAD_PATH'], filename))
-                    db_sess = db_session.create_session()
-                    user = db_sess.query(User).filter(User.id == current_user.id).first()
-                    user.image = filename
-                    db_sess.commit()
-                    return redirect("/profile")
-                else:
-                    mes = "В имени файла есть некоректные символы"
+                filename = str(current_user.id) + "." + file_ext
+                uploaded_file.save(os.path.join(app.config['UPLOAD_PATH'], filename))
+                db_sess = db_session.create_session()
+                user = db_sess.query(User).filter(User.id == current_user.id).first()
+                user.image = filename
+                db_sess.commit()
+                return redirect("/profile")
     return render_template('profile.html', title='Профиль', form=form, message=mes)
 
 
