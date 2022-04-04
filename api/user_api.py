@@ -33,7 +33,7 @@ def games_balance_update():
                               user=current_user)
     current_user.balance_changes_rel.append(new_note)
     db_sess.commit()
-    return jsonify({'win': win, 'choice': ch, 'success': 'ok'})
+    return jsonify({'win': win, 'choice': ch, 'success': 'ok', 'bet': request.json['bet']})
 
 
 @blueprint.route('/api/cheat/', methods=['GET', 'POST'])

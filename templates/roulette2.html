@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
-    <div id="fucking_shit_cyber">
+<div id="fucking_shit_cyber">
     <div id="roulettemain">
         <img src="static/img/cyber_arrow.png" style="display: inline-block;">
         <div style="height: 10px;"></div>
@@ -8,99 +8,46 @@
         <div style="height: 10px;"></div>
         <div>
             <label style="display: inline-block; color: #de5ded;">Введите ставку</label>
-            <input type="number" id="roulettebet1" name="bet" value="1" min="1" style="display: inline-block; background-color: #929292; width: auto;">
+            <input type="number" id="roulettebet1" name="bet" value="1" min="1"
+                style="display: inline-block; background-color: #929292; width: auto;">
         </div>
         <div>
             <label style="display: inline-block; color: #de5ded;">На что ставите?</label>
-            <input type="number" id="roulettebet2" name="number" value="1" min="1" max="8" style="display: inline-block; background-color: #929292; width: auto;">
+            <input type="number" id="roulettebet2" name="number" value="1" min="1" max="8"
+                style="display: inline-block; background-color: #929292; width: auto;">
         </div>
         <div style="text-align: center;">
-        <button onclick="button_click()" id="roulettebutton" style="display: inline-block; width: 100%; 
-        background-color: #929292; color: #8b009b;">Крутите барабан!</button>
-        <p style="display: inline-block; padding: auto; color: #de5ded;" id="winornotwin"></p>
-        {% if current_user.is_authenticated %}
-        <script>
-        window.user = {
-            cur_us_id: {{current_user.id}},
-            cur_us_hash_pas: "{{current_user.hashed_password}}",
-            balance: {{current_user.balance}}
-        }
-        document.getElementById('roulettebutton').disabled = false;
-        </script>
-        {% else %}
-        <script>
-        window.user = {
-            cur_us_id: null,
-            cur_us_hash_pas: null,
-            balance: 0
-        }
-        document.getElementById('roulettebutton').disabled = true;
-        document.getElementById('winornotwin').innerHTML = "Вы не вошли в аккаунт!";
-        </script>
-        {% endif %}
-        <script>
-            window.animation = {
+            <button onclick="button_click()" id="roulettebutton" style="display: inline-block; width: 100%;
+        background-color: #929292; color: #8b009b;">Крутите барабан!
+            </button>
+            <p style="display: inline-block; padding: auto; color: #de5ded;" id="winornotwin"></p>
+            {% if current_user.is_authenticated %}
+            <script>
+                document.getElementById('roulettebutton').disabled = false;
+            </script>
+            {% else %}
+            <script>
+                window.user = {
+                    cur_us_id: null,
+                    cur_us_hash_pas: null,
+                    balance: 0
+                }
+                document.getElementById('roulettebutton').disabled = true;
+                document.getElementById('winornotwin').innerHTML = "Вы не вошли в аккаунт!";
+            </script>
+            {% endif %}
+            <script>
+                window.animation = {
                     runned: false,
                     roulette: document.getElementById("roulette"),
                     angle: 0
                 }
-            async function button_click() {
-                if (Number(document.getElementById('roulettebet1').value) < 1) {
-                    document.getElementById('winornotwin').innerHTML = "Ошибка ставки";
-                }
-                else if (Number(document.getElementById('roulettebet1').value) > window.user.balance) {
-                    document.getElementById('winornotwin').innerHTML = "Недостаточно средств";
-                }
-                else if (Number(document.getElementById('roulettebet2').value) < 1 || Number(document.getElementById('roulettebet2').value) > 8) {
-                    document.getElementById('winornotwin').innerHTML = "Поставьте на другое число";
-                }
-                else if (Number(document.getElementById('roulettebet1').value) <= window.user.balance){
-                    let j = await fetch('/api/game/', {method: 'POST', 
-                                                         headers: {'Content-Type': 'application/json;charset=utf-8'},
-                                                         body: JSON.stringify({"game_name": "cyber_roulette", "bet": document.getElementById('roulettebet1').value, 
-                                                         "number": document.getElementById('roulettebet2').value, "id": window.user.cur_us_id, 
-                                                         "password": window.user.cur_us_hash_pas})}).then(function(response) {
-                                                             return response.json();
-                                                         });
-                startrotation(j);
-                }
-            }
-            function startrotation(j) {
-                var lst = [1, 2, 3, 4, 5, 6, 7, 8];
-                let d = {};
-                for (i=0; i<lst.length; i++) {
-                    d[lst[i]] = 360 / lst.length * i;
-                }
-                let ax = 0.05;
-                let speed = (ax * 2 * (360 * 6 - d[j['choice']] - 360 / lst.length / 2 + (360 - window.animation.angle))) ** 0.5;
-                let flag = true;
-                let id = setInterval(rot, 10);
-                document.getElementById('roulettebutton').disabled = true;
-            function rot() {
-                window.animation.runned = true;
-                if (flag) {
-                    window.animation.angle = (window.animation.angle + speed) % 360;
-                    window.animation.roulette.style.transform = "rotate(" + window.animation.angle + "deg)";
-                    speed -= 0.05;
-                if (speed < 0) {
-                    flag = false;
-                    speed = 0;
-                    document.getElementById('roulettebutton').disabled = false;
-                    if (Number(j['choice']) == Number(document.getElementById('roulettebet2').value)) {
-                        document.getElementById('winornotwin').innerHTML = "Вы выиграли!";
-                    }
-                    else {
-                        document.getElementById('winornotwin').innerHTML = "Вы проиграли!";
-                    }
-                    }
-                }
-            }
-            }
-            function err() {
-                return 'Ошибка'
-            }
-        </script>
+                let lst = [1, 2, 3, 4, 5, 6, 7, 8];
+                let max_bet = 8;
+                let min_bet = 1;
+                let game_name = 'cyber_roulette';
+            </script>
         </div>
-</div>
+    </div>
 </div>
 {% endblock %}
