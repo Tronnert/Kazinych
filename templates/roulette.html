@@ -8,12 +8,32 @@
         <div style="height: 10px;"></div>
         <div>
             <label style="display: inline-block;">Введите ставку</label>
-            <input type="number" id="roulettebet1" name="bet" value="0" style="display: inline-block;">
+            <input type="number" id="roulettebet1" name="bet" value="1" min="1" style="display: inline-block;">
         </div>
         <div>
             <label style="display: inline-block;">На что ставите?</label>
-            <input type="number" id="roulettebet2" name="number" value="0" style="display: inline-block;">
+            <select id="roulette1select" onchange="change_select()">
+                <option value="odd">Нечетные</option>
+                <option value="even">Четные</option>
+                <option value="red">Красные</option>
+                <option value="black">Чёрные</option>
+                <option value="num">Конкретное число</option>
+            </select>
         </div>
+            <div id="strange_div" style="display: none;">
+            <label style="display: inline-block;">Введите число</label>
+            <input type="number" id="roulettebet2" name="number" value="0" style="display: inline-block;">
+            </div>
+            <script>
+                function change_select() {
+                if (document.getElementById('roulette1select').value == 'num') {
+                    document.getElementById('strange_div').style.display = 'inline-block';
+                }
+                else {
+                    document.getElementById('strange_div').style.display = 'none';
+                }
+            }
+            </script>
         <div style="text-align: center;">
             <button onclick="button_click()" id="roulettebutton" style="display: inline-block; width: 100%;">Крутите
                 барабан!</button>
@@ -44,6 +64,14 @@
                 let max_bet = 36;
                 let min_bet = 0;
                 let game_name = 'roulette';
+                if (document.getElementById('roulette1select').value == 'num') {
+                    value = document.getElementById('roulettebet2').value;
+                }
+                else {
+                    value = document.getElementById('roulette1select').value;
+                }
+                bet = document.getElementById('roulettebet1').value;
+                flag_of_multiple_choice = true;
             </script>
         </div>
     </div>
