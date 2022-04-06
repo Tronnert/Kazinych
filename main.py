@@ -145,12 +145,12 @@ def profile():
 
 @app.route('/roulette')
 def roulette():
-    return render_template('roulette.html', title='Рулетка', current_user=current_user)
+    return render_template('roulette.html', title='Рулетка')
 
 
-@app.route('/cyber_roulette')
-def roulette2():
-    return render_template('roulette2.html', title='Рулетка', current_user=current_user)
+# @app.route('/cyber_roulette')
+# def roulette2():
+#     return render_template('roulette2.html', title='Рулетка')
 
 
 @app.errorhandler(404)
@@ -160,7 +160,12 @@ def not_found(error):
 
 @app.route('/cyber_roulette')
 def cyber_roulette():
-    return render_template('roulette2.html', title='Кибер рулетка', current_user=current_user)
+    return render_template('roulette2.html', title='Кибер рулетка')
+
+
+@app.route('/slotmachine')
+def slotmachine():
+    return render_template('slotmachine.html', title='Слоты')
 
 
 def main():
