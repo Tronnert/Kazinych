@@ -162,6 +162,10 @@ def not_found(error):
 def cyber_roulette():
     return render_template('roulette2.html', title='Кибер рулетка', current_user=current_user)
 
+@app.route('/cyber_roulette')
+def cyber_roulette():
+    return render_template('roulette2.html', title='Джунгли', current_user=current_user)
+
 
 def main():
     make_map_image()
