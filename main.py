@@ -158,9 +158,9 @@ def not_found(error):
     return make_response(jsonify({'error': 'Not found'}), 404)
 
 
-@app.route('/cyber_roulette')
+@app.route('/roulette3')
 def cyber_roulette():
-    return render_template('roulette2.html', title='Кибер рулетка', current_user=current_user)
+    return render_template('roulette3.html', title='Рулетка', current_user=current_user)
 
 
 def main():
