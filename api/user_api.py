@@ -20,7 +20,7 @@ def games_balance_update():
     if not request.json:
         return jsonify({'error': 'Empty request'})
     elif not all(key in request.json for key in
-                 ['game_name', 'bet', 'number', 'id', 'password']):
+                 ['game_name', 'bet', 'id', 'password']):
         return jsonify({'error': 'Bad request'})
     db_sess = db_session.create_session()
     current_user = db_sess.query(User).filter(User.id == request.json['id']).first()

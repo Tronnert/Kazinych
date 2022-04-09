@@ -10,6 +10,7 @@ from api import user_api
 from werkzeug.utils import secure_filename
 import os
 import string
+import argparse
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
@@ -25,6 +26,40 @@ login_manager.init_app(app)
 # def check_filename(filename):
 #     print(filename, all(map(lambda x: x in string.ascii_letters + string.digits + ".", filename)))
 #     return all(map(lambda x: x in string.ascii_letters + string.digits + ".", filename))
+
+def check_password(password):
+    a = password
+    c = ["qwertyuiop", "asdfghjkl", "zxcvbnm"]
+    d = ["йцукенгшщзхъ", "фывапролджэ", "ячсмитьбю", "жэё"]
+    if len(a) >= 8:
+        b = False
+        h = False
+        for e in a:
+            if e.isdigit():
+                h = True
+        if h:
+            if a.lower() != a and a.upper() != a:
+                b = True
+                for j in c:
+                    for e in range(len(j)):
+                        if e < len(j) - 2:
+                            if a.lower().find(j[e: e + 3]) != -1:
+                                b = False
+                for j in d:
+                    for e in range(len(j)):
+                        if e < len(j) - 2:
+                            if a.lower().find(j[e: e + 3]) != -1:
+                                b = False
+                if b:
+                    return ""
+                else:
+                    return "В пароле нет ни одной комбинации из 3 буквенных символов, стоящих рядом в строке клавиатуры."
+            else:
+                return "В пароле все символы одного регистра."
+        else:
+            return "В пароле нет ни одной цифры."
+    else:
+        return "Длина пароля меньше 8 символов."
 
 
 @login_manager.user_loader
@@ -46,8 +81,14 @@ def reqister():
             return render_template('register.html', title='Регистрация',
                                    form=form,
                                    message="Пароли не совпадают")
+        mes = check_password(form.password.data)
+        if mes:
+            return render_template('register.html', title='Регистрация',
+                                   form=form,
+                                   message=mes)
         db_sess = db_session.create_session()
-        if db_sess.query(User).filter(User.email == form.email.data).first():
+        if db_sess.query(User).filter(User.email == form.email.data).first() and \
+                db_sess.query(User).filter(User.name == form.name.data).first():
             return render_template('register.html', title='Регистрация',
                                    form=form,
                                    message="Такой пользователь уже есть")
@@ -145,12 +186,12 @@ def profile():
 
 @app.route('/roulette')
 def roulette():
-    return render_template('roulette.html', title='Рулетка', current_user=current_user)
+    return render_template('roulette.html', title='Рулетка')
 
 
 @app.route('/cyber_roulette')
 def roulette2():
-    return render_template('roulette2.html', title='Рулетка', current_user=current_user)
+    return render_template('roulette2.html', title='Рулетка')
 
 
 @app.errorhandler(404)
@@ -160,17 +201,38 @@ def not_found(error):
 
 @app.route('/roulette3')
 def cyber_roulette():
-    return render_template('roulette3.html', title='Рулетка', current_user=current_user)
+    return render_template('roulette2.html', title='Кибер рулетка')
+
+
+@app.route('/slotmachine')
+def slotmachine():
+    return render_template('slotmachine.html', title='Слоты')
+
+
+@app.route('/slot2')
+def slot2():
+    return render_template('slot2.html', title='Слоты')
+
+
+@app.route('/coin_toss')
+def coin_toss():
+    return render_template('coin_toss.html', title='Монетка')
 
 
 def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--local", action="store_false", dest="local")
+    args = parser.parse_args()
+    is_local = args.local
     make_map_image()
     if not os.path.exists("db"):
         os.mkdir("db")
     db_session.global_init("db/casino.db")
-    # port = int(os.environ.get("PORT", 5000))
-    # app.run(host='0.0.0.0', port=port)
-    app.run(port=8080, host='127.0.0.1')
+    if is_local:
+        app.run(port=8080, host='127.0.0.1')
+    else:
+        port = int(os.environ.get("PORT", 5000))
+        app.run(host='0.0.0.0', port=port)
 
 
 if __name__ == '__main__':
