@@ -189,9 +189,9 @@ def roulette():
     return render_template('roulette.html', title='Рулетка')
 
 
-# @app.route('/cyber_roulette')
-# def roulette2():
-#     return render_template('roulette2.html', title='Рулетка')
+@app.route('/cyber_roulette')
+def roulette2():
+    return render_template('roulette2.html', title='Рулетка')
 
 
 @app.errorhandler(404)
@@ -199,7 +199,7 @@ def not_found(error):
     return make_response(jsonify({'error': 'Not found'}), 404)
 
 
-@app.route('/cyber_roulette')
+@app.route('/roulette3')
 def cyber_roulette():
     return render_template('roulette2.html', title='Кибер рулетка')
 
@@ -237,3 +237,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+
