@@ -53,12 +53,6 @@
                         <a class="nav-link" href="/">Главная</a>
                     </li>
                     <li class="nav-item active">
-                        <a class="nav-link" href="/roulette">Рулетка</a>
-                    </li>
-                    <li class="nav-item active">
-                        <a class="nav-link" href="/cyber_roulette">Кибер рулетка</a>
-                    </li>
-                    <li class="nav-item active">
                         <a class="nav-link" href="/about">О нас</a>
                     </li>
                 </ul>
@@ -146,43 +140,20 @@
                         document.getElementById('winornotwin').innerHTML = "Ошибка ставки";
                     }
                     else {
-                    let j = await fetch('/api/game/', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json;charset=utf-8' },
-                        body: JSON.stringify({
-                            "game_name": game_name, "bet": bet,
-                            "number": value, "id": window.user.cur_us_id,
-                            "password": window.user.cur_us_hash_pas
-                        })
-                    }).then(function (response) {
-                        return response.json();
-                    });
-                    startrotation(j, lst);
+                        let j = await fetch('/api/game/', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json;charset=utf-8' },
+                            body: JSON.stringify({
+                                "game_name": game_name, "bet": bet,
+                                "number": value, "id": window.user.cur_us_id,
+                                "password": window.user.cur_us_hash_pas
+                            })
+                        }).then(function (response) {
+                            return response.json();
+                        });
+                        startrotation(j, lst);
+                    }
                 }
-                }
-            }
-            /*if (Number(document.getElementById('roulettebet1').value) < 1) {
-                document.getElementById('winornotwin').innerHTML = "Ошибка ставки";
-            }
-            else if (Number(document.getElementById('roulettebet1').value) > window.user.balance) {
-                document.getElementById('winornotwin').innerHTML = "Недостаточно средств";
-            }
-            else if (Number(document.getElementById('roulettebet2').value) < min_bet || Number(document.getElementById('roulettebet2').value) > max_bet) {
-                document.getElementById('winornotwin').innerHTML = "Поставьте на другое число";
-            }
-            else if (document.getElementById('roulettebet1').value <= window.user.balance) {
-                let j = await fetch('/api/game/', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json;charset=utf-8' },
-                    body: JSON.stringify({
-                        "game_name": game_name, "bet": bet,
-                        "number": value, "id": window.user.cur_us_id,
-                        "password": window.user.cur_us_hash_pas
-                    })
-                }).then(function (response) {
-                    return response.json();
-                });
-                startrotation(j, lst);
             }
         }
         function startrotation(j, lst) {

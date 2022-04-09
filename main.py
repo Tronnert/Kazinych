@@ -201,7 +201,7 @@ def not_found(error):
 
 @app.route('/roulette3')
 def cyber_roulette():
-    return render_template('roulette2.html', title='Кибер рулетка')
+    return render_template('roulette3.html', title='Рулетка')
 
 
 @app.route('/slotmachine')
