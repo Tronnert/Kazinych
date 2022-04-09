@@ -1,0 +1,235 @@
+{% extends "base.html" %}
+{% block content %}
+<div style="padding-top:50px;" class="content d-flex justify-content-center mt-5">
+    <div>
+    <div style="border: 4px solid #CF5178;">
+
+    <div class="content d-flex-wrap justify-content-center mt-2">
+
+            <div id="casino1" class="slotMachine">
+                <div class="slot slot1"></div>
+                <div class="slot slot2"></div>
+                <div class="slot slot3"></div>
+                <div class="slot slot4"></div>
+                <div class="slot slot5"></div>
+                <div class="slot slot6"></div>
+            </div>
+
+            <div id="casino2" class="slotMachine">
+                <div class="slot slot1"></div>
+                <div class="slot slot2"></div>
+                <div class="slot slot3"></div>
+                <div class="slot slot4"></div>
+                <div class="slot slot5"></div>
+                <div class="slot slot6"></div>
+            </div>
+
+            <div id="casino3" class="slotMachine">
+                <div class="slot slot1"></div>
+                <div class="slot slot2"></div>
+                <div class="slot slot3"></div>
+                <div class="slot slot4"></div>
+                <div class="slot slot5"></div>
+                <div class="slot slot6"></div>
+            </div>
+        </div>
+        <div class="content d-flex-wrap justify-content-center mt-2">
+            <div id="casino4" class="slotMachine">
+                <div class="slot slot1"></div>
+                <div class="slot slot2"></div>
+                <div class="slot slot3"></div>
+                <div class="slot slot4"></div>
+                <div class="slot slot5"></div>
+                <div class="slot slot6"></div>
+            </div>
+            <div id="casino5" class="slotMachine">
+                <div class="slot slot1"></div>
+                <div class="slot slot2"></div>
+                <div class="slot slot3"></div>
+                <div class="slot slot4"></div>
+                <div class="slot slot5"></div>
+                <div class="slot slot6"></div>
+            </div>
+            <div id="casino6" class="slotMachine">
+                <div class="slot slot1"></div>
+                <div class="slot slot2"></div>
+                <div class="slot slot3"></div>
+                <div class="slot slot4"></div>
+                <div class="slot slot5"></div>
+                <div class="slot slot6"></div>
+            </div>
+        </div>
+        <div class="content d-flex-wrap justify-content-center mt-2">
+
+<div id="casino7" class="slotMachine">
+                <div class="slot slot1"></div>
+                <div class="slot slot2"></div>
+                <div class="slot slot3"></div>
+                <div class="slot slot4"></div>
+                <div class="slot slot5"></div>
+                <div class="slot slot6"></div>
+            </div>
+<div id="casino8" class="slotMachine">
+                <div class="slot slot1"></div>
+                <div class="slot slot2"></div>
+                <div class="slot slot3"></div>
+                <div class="slot slot4"></div>
+                <div class="slot slot5"></div>
+                <div class="slot slot6"></div>
+            </div>
+            <div id="casino9" class="slotMachine">
+                <div class="slot slot1"></div>
+                <div class="slot slot2"></div>
+                <div class="slot slot3"></div>
+                <div class="slot slot4"></div>
+                <div class="slot slot5"></div>
+                <div class="slot slot6"></div>
+            </div>
+        </div></div>
+        <div class="btn-group btn-group-justified d-flex justify-content-center mt-4" role="group">
+                <button id="casinoShuffle" type="button" class="btn btn-primary btn-lg">Shuffle!</button>
+                <button id="casinoStop" type="button" class="btn btn-primary btn-lg">Stop!</button>
+    </div>
+    <div>
+                <label style="display: inline-block;">Введите ставку</label>
+                <input type="number" id="roulettebet1" name="bet" value="0" style="display: inline-block;">
+            </div>
+            <p style="display: inline-block; padding: auto;" id="winornotwin"></p>
+</div></div>
+<script id="codeScript5">
+let count = 9;
+let j = [];
+let game_name = 'slots2';
+const btnShuffle = document.querySelector('#casinoShuffle');
+const btnStop = document.querySelector('#casinoStop');
+const casino1 = document.querySelector('#casino1');
+const casino2 = document.querySelector('#casino2');
+const casino3 = document.querySelector('#casino3');
+const casino4 = document.querySelector('#casino4');
+const casino5 = document.querySelector('#casino5');
+const casino6 = document.querySelector('#casino6');
+const casino7 = document.querySelector('#casino7');
+const casino8 = document.querySelector('#casino8');
+const casino9 = document.querySelector('#casino9');
+const mCasino1 = new SlotMachine(casino1, {
+  active: 0,
+  delay: 500
+});
+const mCasino2 = new SlotMachine(casino2, {
+  active: 1,
+  delay: 500
+});
+const mCasino3 = new SlotMachine(casino3, {
+  active: 2,
+  delay: 500
+});
+const mCasino4 = new SlotMachine(casino4, {
+  active: 2,
+  delay: 500
+});
+const mCasino5 = new SlotMachine(casino5, {
+  active: 0,
+  delay: 500
+});
+const mCasino6 = new SlotMachine(casino6, {
+  active: 1,
+  delay: 500
+});
+const mCasino7 = new SlotMachine(casino7, {
+  active: 2,
+  delay: 500
+});
+const mCasino8 = new SlotMachine(casino8, {
+  active: 2,
+  delay: 500
+});
+const mCasino9 = new SlotMachine(casino9, {
+  active: 2,
+  delay: 500
+});
+</script>
+<script id="codeScript6">
+btnShuffle.addEventListener('click', async () => {
+  if (Number(document.getElementById('roulettebet1').value) > window.user.balance) {
+                document.getElementById('winornotwin').innerHTML = "Недостаточно средств";
+            }
+  else if (Number(document.getElementById('roulettebet1').value) < 1) {
+                document.getElementById('winornotwin').innerHTML = "Неверная ставка";
+            }
+  else {
+      j = await fetch('/api/game/', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json;charset=utf-8' },
+                    body: JSON.stringify({
+                        "game_name": game_name, "bet": document.getElementById('roulettebet1').value,
+                        "id": window.user.cur_us_id,
+                        "password": window.user.cur_us_hash_pas
+                    })
+                }).then(function (response) {
+                    return response.json();
+      });
+      // window.user.balance = window.user.balance + Number(j['win']) - Number(j['bet']);
+      // console.log(j);
+      count = 9;
+      mCasino1.randomize = function randomize() { return Number(j['choice'][0][0]); }
+      mCasino2.randomize = function randomize() { return Number(j['choice'][0][1]); }
+      mCasino3.randomize = function randomize() { return Number(j['choice'][0][2]); }
+      mCasino4.randomize = function randomize() { return Number(j['choice'][1][0]); }
+      mCasino5.randomize = function randomize() { return Number(j['choice'][1][1]); }
+      mCasino6.randomize = function randomize() { return Number(j['choice'][1][2]); }
+      mCasino7.randomize = function randomize() { return Number(j['choice'][2][0]); }
+      mCasino8.randomize = function randomize() { return Number(j['choice'][2][1]); }
+      mCasino9.randomize = function randomize() { return Number(j['choice'][2][2]); }
+      mCasino1.shuffle(9999);
+      mCasino2.shuffle(9999);
+      mCasino3.shuffle(9999);
+      mCasino4.shuffle(9999);
+      mCasino5.shuffle(9999);
+      mCasino6.shuffle(9999);
+      mCasino7.shuffle(9999);
+      mCasino8.shuffle(9999);
+      mCasino9.shuffle(9999);
+      document.getElementById('casinoShuffle').disabled = true;
+      }
+});
+
+btnStop.addEventListener('click', () => {
+  switch(count) {
+    case 9:
+      mCasino1.stop();
+      break;
+    case 8:
+      mCasino2.stop();
+      break;
+    case 7:
+      mCasino3.stop();
+      break;
+    case 6:
+      mCasino4.stop();
+      break;
+    case 5:
+      mCasino5.stop();
+      break;
+    case 4:
+      mCasino6.stop();
+      break;
+    case 3:
+      mCasino7.stop();
+      break;
+    case 2:
+      mCasino8.stop();
+      break;
+    case 1:
+      mCasino9.stop();
+      window.user.balance = window.user.balance + Number(j['win']) - Number(j['bet']);
+      document.getElementById('nav_balance').innerHTML = window.user.balance;
+<!--      alert(mCasino1.active);-->
+<!--      alert(mCasino2.active);-->
+<!--      alert(mCasino3.active);-->
+      document.getElementById('casinoShuffle').disabled = false;
+      break;
+  }
+  count--;
+});
+</script>
+{% endblock %}

@@ -68,4 +68,73 @@
 <!--        </div>-->
 <!--    </div>-->
 <!--</div>-->
+<div class="container d-flex justify-content-start mt-5">
+    <div class="container d-flex justify-content-center mt-5" style="width: 500px;">
+        <div id="demo2" class="carousel slide" data-ride="carousel">
+<!--            <ul class="carousel-indicators" style="z-index:1">-->
+<!--                <li data-target="#demo" data-slide-to="0" class="active"></li>-->
+<!--                <li data-target="#demo" data-slide-to="1"></li>-->
+<!--                <li data-target="#demo" data-slide-to="2"></li>-->
+<!--            </ul>-->
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <a href="/slotmachine">
+                        <img src="{{ url_for('static', filename='img/slots1_car.png') }}" alt="Los Angeles">
+                    </a>
+                    <div class="carousel-caption">
+                        <h3>Первые слоты</h3>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <a href="/slot2">
+                    <img src="{{ url_for('static', filename='img/slots2_car.png') }}" alt="Chicago"></a>
+                    <div class="carousel-caption">
+                        <h3>Вторые слоты</h3>
+                    </div>
+                </div>
+            </div>
+            <a class="carousel-control-prev" href="#demo2" data-slide="prev">
+                <span class="carousel-control-prev-icon"></span>
+            </a>
+            <a class="carousel-control-next" href="#demo2" data-slide="next">
+                <span class="carousel-control-next-icon"></span>
+            </a>
+        </div>
+    </div>
+</div>
+<!--</div>-->
+<div class="container d-flex justify-content-start mt-5">
+    <div class="container d-flex justify-content-center mt-5" style="width: 500px;">
+        <div id="demo3" class="carousel slide" data-ride="carousel">
+<!--            <ul class="carousel-indicators" style="z-index:1">-->
+<!--                <li data-target="#demo" data-slide-to="0" class="active"></li>-->
+<!--                <li data-target="#demo" data-slide-to="1"></li>-->
+<!--                <li data-target="#demo" data-slide-to="2"></li>-->
+<!--            </ul>-->
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <a href="/coin_toss">
+                        <img src="{{ url_for('static', filename='img/coin_car.png') }}" alt="Los Angeles">
+                    </a>
+                    <div class="carousel-caption">
+                        <h3>Первые слоты</h3>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <a href="/coin_toss">
+                    <img src="{{ url_for('static', filename='img/coin_car.png') }}" alt="Chicago"></a>
+                    <div class="carousel-caption">
+                        <h3>Вторые слоты</h3>
+                    </div>
+                </div>
+            </div>
+            <a class="carousel-control-prev " href="#demo3" data-slide="prev">
+                <span class="carousel-control-prev-icon"></span>
+            </a>
+            <a class="carousel-control-next" href="#demo3" data-slide="next">
+                <span class="carousel-control-next-icon"></span>
+            </a>
+        </div>
+    </div>
+</div>
 {% endblock %}

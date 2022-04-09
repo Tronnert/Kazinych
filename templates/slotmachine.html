@@ -2,7 +2,7 @@
 {% block content %}
 <div id="casino" style="padding-top:50px;">
     <div class="content">
-        <h1>Use the API</h1>
+        <h1>Наши замечательные слоты</h1>
         <div>
             <div id="casino1" class="slotMachine" style="margin-left: -65px;">
                 <div class="slot slot1"></div>
@@ -36,14 +36,14 @@
                 <button id="casinoStop" type="button" class="btn btn-primary btn-lg">Stop!</button>
 
             </div>
-            <div>
+
+        </div>
+    </div>
+<div>
                 <label style="display: inline-block;">Введите ставку</label>
                 <input type="number" id="roulettebet1" name="bet" value="0" style="display: inline-block;">
             </div>
             <p style="display: inline-block; padding: auto;" id="winornotwin"></p>
-        </div>
-    </div>
-
 </div>
 <script id="codeScript5">
 let count = 0;
@@ -75,6 +75,9 @@ btnShuffle.addEventListener('click', async () => {
   if (Number(document.getElementById('roulettebet1').value) > window.user.balance) {
                 document.getElementById('winornotwin').innerHTML = "Недостаточно средств";
             }
+  else if (Number(document.getElementById('roulettebet1').value) < 1) {
+                document.getElementById('winornotwin').innerHTML = "Неверная ставка";
+            }
   else {
       j = await fetch('/api/game/', {
                     method: 'POST',
@@ -87,7 +90,7 @@ btnShuffle.addEventListener('click', async () => {
                 }).then(function (response) {
                     return response.json();
       });
-      console.log(j);
+      // console.log(j);
       count = 3;
       mCasino1.randomize = function randomize() { return Number(j['choice'][0]); }
       mCasino2.randomize = function randomize() { return Number(j['choice'][1]); }
@@ -95,6 +98,7 @@ btnShuffle.addEventListener('click', async () => {
       mCasino1.shuffle(9999);
       mCasino2.shuffle(9999);
       mCasino3.shuffle(9999);
+      document.getElementById('casinoShuffle').disabled = true;
       }
 });
 
@@ -113,6 +117,7 @@ btnStop.addEventListener('click', () => {
 <!--      alert(mCasino1.active);-->
 <!--      alert(mCasino2.active);-->
 <!--      alert(mCasino3.active);-->
+      document.getElementById('casinoShuffle').disabled = false;
       break;
   }
   count--;
