@@ -214,6 +214,11 @@ def slot2():
     return render_template('slot2.html', title='Слоты')
 
 
+@app.route('/dice')
+def dice():
+    return render_template('dices.html', title='Кости')
+
+
 @app.route('/coin_toss')
 def coin_toss():
     return render_template('coin_toss.html', title='Монетка')
