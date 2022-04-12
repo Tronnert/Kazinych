@@ -1,0 +1,179 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="mt-5" style="padding-top:1px;">
+<div id="shell" class="mt-5">
+<div class="game-container">
+    <p class="instructions">
+      Find the ball
+    </p>
+    <div class="shell-game">
+      <div class="cups-box">
+        <div id="cup1" class="cup cup-1"></div>
+        <div id="cup2" class="cup cup-2"></div>
+        <div id="cup3" class="cup cup-3"></div>
+        <div id="ball"></div>
+      </div>
+    </div>
+    <button id="btnStart">START</button>
+    <div id="bet">
+        <label style="display: inline-block;">Введите ставку</label>
+        <input type="number" id="roulettebet1" name="bet" value="0" style="display: inline-block;">
+    </div>
+    <div id="winornotwin"></div>
+  </div>
+<!-- partial -->
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/gsap/2.0.2/TweenMax.min.js'></script><script>
+    $(function(){
+
+	let intMoves = 5; // number of moves
+	let speed = 0.5; // initial speed of moves - increase each moves
+	let maxSpeed = 0.2; // maximum speed of moves
+
+	let objMovePattern = []; // object contain a pattern for the cup shifting
+	let ball = $('#ball');
+	let widthBall = (ball.width()/2)-40;
+	let firstCup;
+	let game_start = false;
+	let j = [];
+    let game_name = 'shell_game';
+
+	(function init() {
+		objMovePattern = generateMovePatterns();
+		$('#btnStart').on('click', startGame);
+	})();
+
+	 async function startGame(event) {
+		// $(event.currentTarget).remove();
+		if (Number(document.getElementById('roulettebet1').value) > window.user.balance) {
+                document.getElementById('winornotwin').innerHTML = "Недостаточно средств";
+            }
+  else if (Number(document.getElementById('roulettebet1').value) < 1) {
+                document.getElementById('winornotwin').innerHTML = "Неверная ставка";
+            }
+  else {
+      j = await fetch('/api/game/', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json;charset=utf-8' },
+                    body: JSON.stringify({
+                        "game_name": game_name, "bet": document.getElementById('roulettebet1').value,
+                        "id": window.user.cur_us_id,
+                        "password": window.user.cur_us_hash_pas
+                    })
+                }).then(function (response) {
+                    return response.json();
+      });
+		game_start = true;
+		$('#btnStart').prop('disabled', true);
+		firstCup = Math.round(Math.random()*2+1);
+		var cup = $('.cup-'+firstCup);
+		TweenMax.to($('.cup-1'), 0.5,{y:0});
+		TweenMax.to($('.cup-2'), 0.5,{y:0});
+		TweenMax.to($('.cup-3'), 0.5,{y:0});
+		TweenMax.to(cup, 0.5,{y:-130});
+        $('#winornotwin').html('Игра началась')
+		TweenMax.to(ball, 0.5,{left: cup.position().left+widthBall, y:-30, onComplete:function(){
+			ball.css('z-index', '1');
+			$('.cup').css('z-index', '10');
+			TweenMax.to(cup, 0.5,{y:0, onComplete:shakeCups});
+		}});
+	}
+    }
+	function shakeCups() {
+		ball.css('display', 'none');
+		var aPos = [$('.cup-'+objMovePattern[0][0]).position().left, $('.cup-'+objMovePattern[0][1]).position().left, $('.cup-'+objMovePattern[0][2]).position().left];
+		for(var i = 0; i < objMovePattern.length; i++){
+			speed = (speed > maxSpeed) ? speed/1.1 : maxSpeed;
+			TweenMax.to($('.cup-'+objMovePattern[i][0]), speed,{left: aPos[0], delay:speed*i, ease:Sine.easeOut});
+			TweenMax.to($('.cup-'+objMovePattern[i][1]), speed,{left: aPos[1], delay:speed*i, ease:Sine.easeOut});
+			if(i == (objMovePattern.length-1)) TweenMax.to($('.cup-'+objMovePattern[i][2]), speed,{left: aPos[2], delay:speed*i, ease:Sine.easeOut, onComplete: unableCupClick});
+			else TweenMax.to($('.cup-'+objMovePattern[i][2]), speed,{left: aPos[2], delay:speed*i, ease:Sine.easeOut});
+		}
+	}
+
+	function unableCupClick() {
+		$('.cup').css('cursor', 'pointer');
+		$('.cup').on('click', clickCup);
+	}
+
+	function un_cl() {
+	    $('.cup').css('cursor', '');
+	}
+
+	function clickCup(event) {
+	    if (game_start) {
+		var currentCup = $(event.currentTarget);
+		currentCup.off('click');
+		currentCup.css('cursor', 'default');
+		var iCup = currentCup.attr('id').split('cup')[1];
+		// ball.css({'left':$('.cup-'+firstCup).position().left+widthBall, 'display':'block'});
+		TweenMax.to($('.cup-'+iCup), 0.5,{y: -130, ease:Sine.easeIn, delay:0.1});
+		win = Math.round(Math.random()*2+1);
+		if (Number(j['choice'])) {
+		    $('#winornotwin').html('Вы выиграли');
+		    ball.css({'left':currentCup.position().left+widthBall, 'display':'block'});
+		    // TweenMax.to(ball, 0.0,{left:currentCup.position().left+widthBall, y:-30, delay:0.0})
+		}
+		else {
+		    let ab = [];
+		    for (let i=1; i < 4; i++) {
+		        if (i != iCup) {
+		            ab.push(i);
+		        }
+		    }
+		    ab = shuffle(ab);
+		    ball.css({'left':$('.cup-'+ab[0]).position().left+widthBall, 'display':'block'});
+		    // TweenMax.to(ball, 0.0,{left:currentCup.position().left+widthBall, y:-30, delay:0.0})
+		    $('#winornotwin').html('Вы проиграли');
+		    setTimeout(() => {TweenMax.to($('.cup-'+iCup), 0.5,{y:0, ease:Sine.easeIn, delay:0.1});}, 1000);
+		}
+		un_cl();
+		$('#btnStart').prop('disabled', false);
+		game_start = false;
+		window.user.balance = window.user.balance + Number(j['win']) - Number(j['bet']);
+      document.getElementById('nav_balance').innerHTML = window.user.balance;
+		}
+	}
+
+	// Tool functions
+
+	function generateMovePatterns() {
+		var objMoves = [[1,2,3]]; // initial state, cups order
+		var aMoves = [1,2,3];
+
+		for(var i = 0; i < intMoves; i++){
+			var initialPattern = [1,2,3];
+			var objShuffledPattern = shuffle(initialPattern);
+			while(objShuffledPattern[0] == objMoves[i][0]){
+				objShuffledPattern = shuffle(initialPattern);
+			}
+			objMoves.push(objShuffledPattern);
+		}
+
+		return objMoves;
+	}
+
+	function shuffle(array) {
+		var currentIndex = array.length, temporaryValue, randomIndex;
+
+		// While there remain elements to shuffle...
+		while (0 !== currentIndex) {
+
+			// Pick a remaining element...
+			randomIndex = Math.floor(Math.random() * currentIndex);
+			currentIndex -= 1;
+
+			// And swap it with the current element.
+			temporaryValue = array[currentIndex];
+			array[currentIndex] = array[randomIndex];
+			array[randomIndex] = temporaryValue;
+		}
+
+		return array;
+	}
+
+});
+</script>
+</div>
+</div>
+{% endblock %}

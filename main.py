@@ -136,9 +136,13 @@ def make_map_image():
         "format": "json"}
     response = requests.get(geocoder_api_server, params=geocoder_params)
     json_response = response.json()
-    toponym = json_response["response"]["GeoObjectCollection"][
-        "featureMember"][0]["GeoObject"]
-    toponym_coodrinates = toponym["Point"]["pos"]
+    resp = json_response["response"]
+    geoobjcol = resp["GeoObjectCollection"]
+    featmem = geoobjcol[
+        "featureMember"][0]
+    toponym = featmem["GeoObject"]
+    point = toponym["Point"]
+    toponym_coodrinates = point["pos"]
     toponym_longitude, toponym_lattitude = toponym_coodrinates.split(" ")
     delta = "1.5"
     map_params = {
@@ -222,6 +226,11 @@ def dice():
 @app.route('/coin_toss')
 def coin_toss():
     return render_template('coin_toss.html', title='Монетка')
+
+
+@app.route('/shell_game')
+def shell_game():
+    return render_template('shell_game.html', title='Наперстки')
 
 
 def main():

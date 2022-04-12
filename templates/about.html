@@ -1,10 +1,32 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="mt-5">
-    <h1>
-        Мы находимся здесь
-    </h1>
-    <img src="{{ url_for('static', filename='img/map.png') }}">
+<div class="mt-5" style="padding-top:1px;">
+    <div class="mt-5">
+        <h1>
+            Мы находимся здесь
+        </h1>
+        <img src="{{ url_for('static', filename='img/map.png') }}" id="first">
+        <div class="container justify-content-center mt-5">
+            <button id="btn">Zoom+</button>
+            <button>Zoom-</button>
+            <button>Left</button>
+            <button>Up</button>
+            <button>Right</button>
+            <button>Down</button>
+        </div>
+    </div>
 </div>
+<script>
+    $(function(){
+	(function init() {
+		$('#btn').on('click', startGame);
+	})();
+
+	 function startGame(event) {
+	    let current = $(event.currentTarget);
+        $('#first').attr("src", "{{ url_for('static', filename='img/map.png') }}?" + Math.random());
+    }
+});
+</script>
 {% endblock %}
