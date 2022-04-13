@@ -11,15 +11,27 @@ class User(SqlAlchemyBase, UserMixin, SerializerMixin):
     __tablename__ = 'users'
 
     id = sqlalchemy.Column(sqlalchemy.Integer,
-                           primary_key=True, autoincrement=True)
-    name = sqlalchemy.Column(sqlalchemy.String, nullable=True)
-    about = sqlalchemy.Column(sqlalchemy.String, nullable=True)
-    email = sqlalchemy.Column(sqlalchemy.String, index=True, unique=True, nullable=True)
-    hashed_password = sqlalchemy.Column(sqlalchemy.String, nullable=True)
-    created_date = sqlalchemy.Column(sqlalchemy.DateTime, default=datetime.datetime.now)
-    balance = sqlalchemy.Column(sqlalchemy.Integer, nullable=True, default=10)
-    image = sqlalchemy.Column(sqlalchemy.String, nullable=True, default="empty_image.png")
-    balance_changes_rel = orm.relation("BalanceChanges", back_populates='user')
+                              primary_key=True,
+                              autoincrement=True)
+    name = sqlalchemy.Column(sqlalchemy.String,
+                              nullable=True)
+    about = sqlalchemy.Column(sqlalchemy.String,
+                              nullable=True)
+    email = sqlalchemy.Column(sqlalchemy.String,
+                              index=True,
+                              unique=True,
+                              nullable=True)
+    hashed_password = sqlalchemy.Column(sqlalchemy.String,
+                              nullable=True)
+    created_date = sqlalchemy.Column(sqlalchemy.DateTime,
+                              default=datetime.datetime.now)
+    balance = sqlalchemy.Column(sqlalchemy.Integer,
+                              nullable=True, default=10)
+    image = sqlalchemy.Column(sqlalchemy.String,
+                              nullable=True,
+                              default="empty_image.png")
+    balance_changes_rel = orm.relation("BalanceChanges",
+                              back_populates='user')
 
     def set_password(self, password):
         self.hashed_password = generate_password_hash(password)

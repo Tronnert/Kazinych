@@ -22,10 +22,17 @@ app.register_blueprint(user_api.blueprint)
 login_manager.init_app(app)
 
 
-#
-# def check_filename(filename):
-#     print(filename, all(map(lambda x: x in string.ascii_letters + string.digits + ".", filename)))
-#     return all(map(lambda x: x in string.ascii_letters + string.digits + ".", filename))
+def check_email(email):
+    a = email.split('@')
+    if len(a) < 2:
+        return "отсутствует @"
+    else:
+        b = a.split('.')
+        if len(b) < 2:
+            return 'отсутствует точка'
+        else:
+            return ''
+
 
 def check_password(password):
     a = password
@@ -53,7 +60,7 @@ def check_password(password):
                 if b:
                     return ""
                 else:
-                    return "В пароле нет ни одной комбинации из 3 буквенных символов, стоящих рядом в строке клавиатуры."
+                    return "В пароле есть комбинации из 3 буквенных символов, стоящих рядом в строке клавиатуры."
             else:
                 return "В пароле все символы одного регистра."
         else:
@@ -70,7 +77,8 @@ def load_user(user_id):
 
 @app.route('/')
 def main_page():
-    return render_template("main.html", title="Прибежище афериста")
+    return render_template("main.html",
+                           title="Прибежище афериста")
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -83,13 +91,15 @@ def reqister():
                                    message="Пароли не совпадают")
         mes = check_password(form.password.data)
         if mes:
-            return render_template('register.html', title='Регистрация',
+            return render_template('register.html',
+                                   title='Регистрация',
                                    form=form,
                                    message=mes)
         db_sess = db_session.create_session()
         if db_sess.query(User).filter(User.email == form.email.data).first() and \
                 db_sess.query(User).filter(User.name == form.name.data).first():
-            return render_template('register.html', title='Регистрация',
+            return render_template('register.html',
+                                   title='Регистрация',
                                    form=form,
                                    message="Такой пользователь уже есть")
         user = User(
@@ -102,7 +112,9 @@ def reqister():
         db_sess.commit()
         login_user(user, remember=form.remember_me.data)
         return redirect('/')
-    return render_template('register.html', title='Регистрация', form=form)
+    return render_template('register.html',
+                           title='Регистрация',
+                           form=form)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -112,12 +124,15 @@ def login():
         db_sess = db_session.create_session()
         user = db_sess.query(User).filter(User.email == form.email.data).first()
         if user and user.check_password(form.password.data):
-            login_user(user, remember=form.remember_me.data)
+            login_user(user,
+                       remember=form.remember_me.data)
             return redirect("/")
         return render_template('login.html',
                                message="Неправильный логин или пароль",
                                form=form)
-    return render_template('login.html', title='Авторизация', form=form)
+    return render_template('login.html',
+                           title='Авторизация',
+                           form=form)
 
 
 @app.route('/logout')
@@ -157,9 +172,40 @@ def make_map_image():
         file.write(response.content)
 
 
+def make_map1_image():
+    toponym_to_find = "тихиий+океан"
+    geocoder_api_server = "http://geocode-maps.yandex.ru/1.x/"
+    geocoder_params = {
+        "apikey": "40d1649f-0493-4b70-98ba-98533de7710b",
+        "geocode": toponym_to_find,
+        "format": "json"}
+    response = requests.get(geocoder_api_server, params=geocoder_params)
+    json_response = response.json()
+    resp = json_response["response"]
+    geoobjcol = resp["GeoObjectCollection"]
+    featmem = geoobjcol[
+        "featureMember"][0]
+    toponym = featmem["GeoObject"]
+    point = toponym["Point"]
+    toponym_coodrinates = point["pos"]
+    toponym_longitude, toponym_lattitude = toponym_coodrinates.split(" ")
+    delta = "1.5"
+    map_params = {
+        "ll": ",".join([toponym_longitude, toponym_lattitude]),
+        "spn": ",".join([delta, delta]),
+        "l": "map"
+    }
+    map_api_server = "http://static-maps.yandex.ru/1.x/"
+    response = requests.get(map_api_server, params=map_params)
+    map_file = "static/img/map1.png"
+    with open(map_file, "wb") as file:
+        file.write(response.content)
+
+
 @app.route('/about')
 def about():
-    return render_template('about.html', title='О нас')
+    return render_template('about.html',
+                           title='О нас')
 
 
 # @app.route('/game')
@@ -185,17 +231,22 @@ def profile():
                 user.image = filename
                 db_sess.commit()
                 return redirect("/profile")
-    return render_template('profile.html', title='Профиль', form=form, message=mes)
+    return render_template('profile.html',
+                           title='Профиль',
+                           form=form,
+                           message=mes)
 
 
 @app.route('/roulette')
 def roulette():
-    return render_template('roulette.html', title='Рулетка')
+    return render_template('roulette.html',
+                           title='Рулетка')
 
 
 @app.route('/cyber_roulette')
 def roulette2():
-    return render_template('roulette2.html', title='Рулетка')
+    return render_template('roulette2.html',
+                           title='Рулетка')
 
 
 @app.errorhandler(404)
@@ -205,48 +256,67 @@ def not_found(error):
 
 @app.route('/roulette3')
 def cyber_roulette():
-    return render_template('roulette3.html', title='Рулетка')
+    return render_template('roulette3.html',
+                           title='Рулетка')
 
 
 @app.route('/slotmachine')
 def slotmachine():
-    return render_template('slotmachine.html', title='Слоты')
+    return render_template('slotmachine.html',
+                           title='Слоты')
 
 
 @app.route('/slot2')
 def slot2():
-    return render_template('slot2.html', title='Слоты')
+    return render_template('slot2.html',
+                           title='Слоты')
 
 
 @app.route('/dice')
 def dice():
-    return render_template('dices.html', title='Кости')
+    return render_template('dices.html',
+                           title='Кости')
 
 
 @app.route('/coin_toss')
 def coin_toss():
-    return render_template('coin_toss.html', title='Монетка')
+    return render_template('coin_toss.html',
+                           title='Монетка')
 
 
 @app.route('/shell_game')
 def shell_game():
-    return render_template('shell_game.html', title='Наперстки')
+    return render_template('shell_game.html',
+                           title='Наперстки')
 
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--local", action="store_false", dest="local")
+    parser.add_argument("--local",
+                        action="store_true",
+                        dest="local",
+                        default=False)
+    parser.add_argument("--debug",
+                        action="store_true",
+                        dest="debug",
+                        default=False)
     args = parser.parse_args()
     is_local = args.local
+    is_debug = args.debug
     make_map_image()
+    make_map1_image()
     if not os.path.exists("db"):
         os.mkdir("db")
     db_session.global_init("db/casino.db")
     if is_local:
-        app.run(port=8080, host='127.0.0.1')
+        app.run(port=8080,
+                host='127.0.0.1',
+                debug=is_debug)
     else:
         port = int(os.environ.get("PORT", 5000))
-        app.run(host='0.0.0.0', port=port)
+        app.run(host='0.0.0.0',
+                port=port,
+                debug=is_debug)
 
 
 if __name__ == '__main__':

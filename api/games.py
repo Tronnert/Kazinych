@@ -104,8 +104,12 @@ class ShellGame(Game):
             return 0, 0
 
 
-games_dict = {'roulette': Roulette(), 'cyber_roulette': Cyber_Roulette(),
-              'slots1': Slots1(), 'slots2': Slots2(), 'coin_toss': CoinToss(), 'dice': Dice(),
+games_dict = {'roulette': Roulette(),
+              'cyber_roulette': Cyber_Roulette(),
+              'slots1': Slots1(),
+              'slots2': Slots2(),
+              'coin_toss': CoinToss(),
+              'dice': Dice(),
               'shell_game': ShellGame()}
 # first_roulette = Game('first', 0.2, 0.5, 1, 1.2, 1.5)
 # games_dict.update(first_roulette.get())

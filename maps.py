@@ -8,7 +8,7 @@ class Example:
         self.r_minor = 6356752.3142
         self.param_l = 'map'
         self.inp = 'кипр'
-        self.mapfile = 'map.png'
+        self.mapfile = 'static/img/map.png'
         self.point = ''
         self.z = 8
         self.toponym_longitude = ""
@@ -152,7 +152,7 @@ class Example1:
         self.r_minor = 6356752.3142
         self.param_l = 'map'
         self.inp = 'тихиий+океан'
-        self.mapfile = 'map.png'
+        self.mapfile = 'static/img/map1.png'
         self.point = ''
         self.z = 8
         self.toponym_longitude = ""
@@ -290,4 +290,5 @@ class Example1:
         return 2 ** (8 + self.z) / self.r_major / math.pi
 
 
-maps_dict = {'map1': Example(), 'map2': Example1()}
+maps_dict = {'map': Example(),
+             'map1': Example1()}

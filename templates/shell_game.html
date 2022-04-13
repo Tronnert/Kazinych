@@ -22,6 +22,17 @@
     <div id="winornotwin"></div>
   </div>
 <!-- partial -->
+    {% if not current_user.is_authenticated %}
+<script>
+                window.user = {
+                    cur_us_id: null,
+                    cur_us_hash_pas: null,
+                    balance: 0
+                }
+                document.getElementById('btnStart').disabled = true;
+                document.getElementById('winornotwin').innerHTML = "Вы не вошли в аккаунт!";
+            </script>
+            {% endif %}
   <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js'></script>
 <script src='https://cdnjs.cloudflare.com/ajax/libs/gsap/2.0.2/TweenMax.min.js'></script><script>
     $(function(){

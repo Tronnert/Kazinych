@@ -8,24 +8,55 @@
         </h1>
         <img src="{{ url_for('static', filename='img/map.png') }}" id="first">
         <div class="container justify-content-center mt-5">
-            <button id="btn">Zoom+</button>
-            <button>Zoom-</button>
-            <button>Left</button>
-            <button>Up</button>
-            <button>Right</button>
-            <button>Down</button>
+            <button class="fuck">Zoom+</button>
+            <button class="fuck">Zoom-</button>
+            <button class="fuck">Left</button>
+            <button class="fuck">Up</button>
+            <button class="fuck">Right</button>
+            <button class="fuck">Down</button>
+        </div>
+    </div>
+    <div>
+        <h1>
+            Здесь находится ничего
+        </h1>
+        <img src="{{ url_for('static', filename='img/map1.png') }}" id="sec">
+        <div class="container justify-content-center mt-5">
+            <button class="fuck2">Zoom+</button>
+            <button class="fuck2">Zoom-</button>
+            <button class="fuck2">Left</button>
+            <button class="fuck2">Up</button>
+            <button class="fuck2">Right</button>
+            <button class="fuck2">Down</button>
         </div>
     </div>
 </div>
 <script>
     $(function(){
 	(function init() {
-		$('#btn').on('click', startGame);
+		$('.fuck').on('click', startGame);
+		$('.fuck2').on('click', startGame);
 	})();
 
-	 function startGame(event) {
+	 async function startGame(event) {
 	    let current = $(event.currentTarget);
-        $('#first').attr("src", "{{ url_for('static', filename='img/map.png') }}?" + Math.random());
+	    await fetch('/api/move/', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json;charset=utf-8' },
+                    body: JSON.stringify({"move": current.html()})
+                }).then(function (response) {
+                $('#first').attr("src", "{{ url_for('static', filename='img/map.png') }}?" + Math.random());
+        });
+    }
+    async function startGame(event) {
+	    let current = $(event.currentTarget);
+	    await fetch('/api/move1/', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json;charset=utf-8' },
+                    body: JSON.stringify({"move": current.html()})
+                }).then(function (response) {
+                $('#sec').attr("src", "{{ url_for('static', filename='img/map1.png') }}?" + Math.random());
+        });
     }
 });
 </script>
