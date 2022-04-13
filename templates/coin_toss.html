@@ -17,6 +17,16 @@
         </div>
     </div>
     <!--Script-->
+{% if not current_user.is_authenticated %}
+<script>
+     window.user = {
+                    cur_us_id: null,
+                    cur_us_hash_pas: null,
+                    balance: 0
+                }
+                document.getElementById('flip-button').disabled = true;
+</script>
+            {% endif %}
   <script type="text/javascript">
 let heads = 0;
 let tails = 0;

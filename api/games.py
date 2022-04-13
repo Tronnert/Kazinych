@@ -79,7 +79,37 @@ class CoinToss(Game):
         return one * 10, one
 
 
-games_dict = {'roulette': Roulette(), 'cyber_roulette': Cyber_Roulette(),
-              'slots1': Slots1(), 'slots2': Slots2(), 'coin_toss': CoinToss()}
+class Dice(Game):
+    def get_win(self, json):
+        one = [[], []]
+        pl = True
+        while sum(one[0]) < 100 and sum(one[1]) < 100:
+            if pl:
+                one[0].append(random.randint(1, 6))
+                if one[0][-1] == 1:
+                    pl = False
+            else:
+                one[1].append(random.randint(1, 6))
+                if one[1][-1] == 1:
+                    pl = True
+        return 2 * int(json['bet']) * (sum(one[0]) >= 100), one
+
+
+class ShellGame(Game):
+    def get_win(self, json):
+        one = random.randint(0, 2)
+        if one == 2:
+            return int(json['bet']) * 4, 1
+        else:
+            return 0, 0
+
+
+games_dict = {'roulette': Roulette(),
+              'cyber_roulette': Cyber_Roulette(),
+              'slots1': Slots1(),
+              'slots2': Slots2(),
+              'coin_toss': CoinToss(),
+              'dice': Dice(),
+              'shell_game': ShellGame()}
 # first_roulette = Game('first', 0.2, 0.5, 1, 1.2, 1.5)
 # games_dict.update(first_roulette.get())

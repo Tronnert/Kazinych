@@ -23,8 +23,6 @@ class LoginForm(FlaskForm):
     submit = SubmitField('Войти')
 
 
-
-
 class UploadForm(FlaskForm):
     file = FileField('File')
     submit = SubmitField('Submit')

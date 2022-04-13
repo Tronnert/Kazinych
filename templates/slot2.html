@@ -96,6 +96,17 @@
             </div>
             <p style="display: inline-block; padding: auto;" id="winornotwin"></p>
 </div></div>
+{% if not current_user.is_authenticated %}
+<script>
+                window.user = {
+                    cur_us_id: null,
+                    cur_us_hash_pas: null,
+                    balance: 0
+                }
+                document.getElementById('casinoShuffle').disabled = true;
+                document.getElementById('winornotwin').innerHTML = "Вы не вошли в аккаунт!";
+            </script>
+            {% endif %}
 <script id="codeScript5">
 let count = 9;
 let j = [];
