@@ -8,7 +8,6 @@ from data.users import User
 from data.balance_changes import BalanceChanges
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-from flask_login import current_user
 
 class Spammer:
     def __init__(self, app):
