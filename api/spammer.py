@@ -12,10 +12,12 @@ from email.mime.text import MIMEText
 class Spammer:
     def __init__(self, app):
         self.app = app
-        schedule.every(24).hours.do(self.send_emails)
+        sc = schedule.Scheduler()
+        sc.every(24).hours.do(self.send_emails)
         while True:
-            schedule.run_pending()
+            sc.run_pending()
             time.sleep(1)
+
 
 
     def send_emails(self):
@@ -32,8 +34,6 @@ class Spammer:
                 msg["From"] = "spammer.noreply@mail.ru"
                 with self.app.app_context():
                     html_msg = MIMEText(render_template('email.html', name=user.name, time=dt), "html")
-                    print(type(html_msg))
                     msg.attach(html_msg)
                 self.server.sendmail(self.address, user.email, msg.as_string())
-                print(2)
         self.server.quit()

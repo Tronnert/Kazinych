@@ -13,6 +13,7 @@ import string
 from threading import Thread
 from api.spammer import Spammer
 import argparse
+from api.clicker import Clicker
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
@@ -314,12 +315,16 @@ def main():
     if is_local:
         thread = Thread(target=spammer_def, daemon=True)
         thread.start()
+        clicker_thread = Thread(target=clicker_def)
+        clicker_thread.start()
         app.run(port=8080,
                 host='127.0.0.1',
                 debug=is_debug)
     else:
         thread = Thread(target=spammer_def, daemon=True)
         thread.start()
+        clicker_thread = Thread(target=clicker_def)
+        clicker_thread.start()
         port = int(os.environ.get("PORT", 5000))
         app.run(host='0.0.0.0',
                 port=port,
@@ -328,6 +333,9 @@ def main():
 
 def spammer_def():
     spammer = Spammer(app)
+
+def clicker_def():
+    clicker = Clicker()
 
 
 
