@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container_coin">
+
+        <div class="coin" id="coin">
+            <div class="heads">
+                <img src="https://jkscoinworld.com/wp-content/uploads/2018/05/2013-a-1.jpg">
+            </div>
+            <div class="tails">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTKPXdeMWZbX3Vk9Qc3tgGtERTCZNe5z1OyzXN8ZejoIrXgA95Wi4mfTV3BgGr0lGHO5I4&usqp=CAU">
+            </div>
+        </div>
+        <div class="buttons">
+            <button id="flip-button">
+                Flip Coin
+            </button>
+        </div>
+    </div>
+    <!--Script-->
+{% if not current_user.is_authenticated %}
+<script>
+     window.user = {
+                    cur_us_id: null,
+                    cur_us_hash_pas: null,
+                    balance: 0
+                }
+                document.getElementById('flip-button').disabled = true;
+</script>
+            {% endif %}
+  <script type="text/javascript">
+let heads = 0;
+let tails = 0;
+let j = [];
+let game_name = 'coin_toss';
+let coin = document.querySelector(".coin");
+let flipBtn = document.querySelector("#flip-button");
+flipBtn.addEventListener("click", async () => {
+    j = await fetch('/api/game/', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json;charset=utf-8' },
+                    body: JSON.stringify({
+                        "game_name": game_name, "bet": 5,
+                        "id": window.user.cur_us_id,
+                        "password": window.user.cur_us_hash_pas
+                    })
+                }).then(function (response) {
+                    return response.json();
+      });
+    let i = j['choice'];
+    coin.style.animation = "none";
+    if(i){
+        setTimeout(function(){
+            coin.style.animation = "spin-heads 3s forwards";
+        }, 100);
+    }
+    else{
+        setTimeout(function(){
+            coin.style.animation = "spin-tails 3s forwards";
+        }, 100);
+    }
+    disableButton();
+});
+function disableButton(){
+    flipBtn.disabled = true;
+    setTimeout(function(){
+        flipBtn.disabled = false;
+        window.user.balance = window.user.balance + Number(j['win']) - Number(j['bet']);
+        document.getElementById('nav_balance').innerHTML = window.user.balance;
+    },3000)
+}
+  </script>
+{% endblock %}

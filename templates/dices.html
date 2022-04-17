@@ -1,0 +1,163 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container d-flex justify-content-between mt-5">
+    <div class="container d-flex justify-content-between mt-5">
+        <div>
+            <p>Ваш счет: <span id="player_score">0</span></p>
+        </div>
+        <div>
+            <div class="content d-flex-wrap justify-content-center mt-2">
+                <div id="casino1" class="slotMachine diceMachine">
+                    <div class="slot dice dice1"></div>
+                    <div class="slot dice dice2"></div>
+                    <div class="slot dice dice3"></div>
+                    <div class="slot dice dice4"></div>
+                    <div class="slot dice dice5"></div>
+                    <div class="slot dice dice6"></div>
+                </div>
+            </div>
+            <button id="casinoShuffle" type="button" class="btn btn-primary btn-lg">Киньте кубик</button>
+            <div>
+                <label style="display: inline-block;">Введите ставку</label>
+                <input type="number" id="roulettebet1" name="bet" value="0" style="display: inline-block;">
+            </div>
+            <p style="display: inline-block; padding: auto;" id="winornotwin"></p>
+        </div>
+        <div>
+            <p>Счет казино: <span id="casino_score">0</span></p>
+        </div>
+    </div>
+</div>
+{% if not current_user.is_authenticated %}
+<script>
+                window.user = {
+                    cur_us_id: null,
+                    cur_us_hash_pas: null,
+                    balance: 0
+                }
+                document.getElementById('casinoShuffle').disabled = true;
+                document.getElementById('winornotwin').innerHTML = "Вы не вошли в аккаунт!";
+            </script>
+            {% endif %}
+<script>
+    let count = 0;
+    let count1 = 0;
+    let sum = 0;
+    let sum1 = 0;
+    let j = [];
+    let game_name = 'dice';
+    let game_start = false;
+    let pl = true;
+    const btnShuffle = document.querySelector('#casinoShuffle');
+    const bet = document.querySelector('#roulettebet1');
+    const casino1 = document.querySelector('#casino1');
+    const mCasino1 = new SlotMachine(casino1, {
+        active: 0,
+        delay: 500
+    });
+
+</script>
+<script id="codeScript6">
+    btnShuffle.addEventListener('click', async function cl() {
+        if (game_start) {
+            if (pl) {
+                mCasino1.randomize = function randomize() { return Number(j['choice'][0][count]) - 1; }
+                mCasino1.shuffle(3);
+                btnShuffle.disabled = true;
+                setTimeout(function () {
+                    btnShuffle.disabled = false;
+                    sum = sum + Number(j['choice'][0][count]);
+                    if (sum >= 100) {
+                        game_start = false;
+                        count = count + 1;
+                        document.getElementById('player_score').innerHTML = sum;
+                        bet.disabled = false;
+                        document.getElementById('winornotwin').innerHTML = 'Вы выиграли!';
+                        window.user.balance = window.user.balance + Number(j['win']) - Number(j['bet']);
+                        document.getElementById('nav_balance').innerHTML = window.user.balance;
+                        return 0;
+                    }
+                    if (Number(j['choice'][0][count]) == 1) {
+                        pl = false;
+                        cl();
+                    }
+                    count = count + 1;
+                    document.getElementById('player_score').innerHTML = sum;
+                }, 3000)
+            }
+            else {
+                mCasino1.randomize = function randomize() { return Number(j['choice'][1][count1]) - 1; }
+                mCasino1.shuffle(3);
+                btnShuffle.disabled = true;
+                setTimeout(function () {
+                    btnShuffle.disabled = false;
+                    sum1 = sum1 + Number(j['choice'][1][count1]);
+                    if (sum >= 100) {
+                        game_start = false;
+                        count1 = count1 + 1;
+                        bet.disabled = false;
+                        document.getElementById('casino_score').innerHTML = sum1;
+                        document.getElementById('winornotwin').innerHTML = 'Вы проиграли!';
+                        window.user.balance = window.user.balance + Number(j['win']) - Number(j['bet']);
+                        document.getElementById('nav_balance').innerHTML = window.user.balance;
+                        return 0;
+                    }
+                    if (Number(j['choice'][1][count1]) == 1) {
+                        pl = true;
+                    }
+                    count1 = count1 + 1;
+                    document.getElementById('casino_score').innerHTML = sum1;
+                    if (!pl) {
+                    cl();
+                    }
+                }, 3000)
+            }
+        }
+        else {
+            // console.log(game_name);
+            game_start = true;
+            if (Number(document.getElementById('roulettebet1').value) > window.user.balance) {
+                document.getElementById('winornotwin').innerHTML = "Недостаточно средств";
+            }
+            else if (Number(document.getElementById('roulettebet1').value) < 1) {
+                document.getElementById('winornotwin').innerHTML = "Неверная ставка";
+            }
+            else {
+               j = await fetch('/api/game/', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json;charset=utf-8' },
+                    body: JSON.stringify({
+                        "game_name": game_name, "bet": document.getElementById('roulettebet1').value,
+                        "id": window.user.cur_us_id,
+                        "password": window.user.cur_us_hash_pas
+                    })
+                }).then(function (response) {
+                    return response.json();
+      });
+                // console.log(j);
+                count = 0;
+                count1 = 0;
+                sum = 0;
+                sum1 = 0;
+                pl = true;
+                mCasino1.randomize = function randomize() { return Number(j['choice'][0][count]) - 1; }
+                mCasino1.shuffle(3);
+                btnShuffle.disabled = true;
+                bet.disabled = true;
+                document.getElementById('winornotwin').innerHTML = 'Игра началась';
+                setTimeout(function () {
+                    btnShuffle.disabled = false;
+                    sum = sum + Number(j['choice'][0][count]);
+                    if (Number(j['choice'][0][count]) == 1) {
+                        pl = false;
+                        cl();
+                    }
+                    count = count + 1;
+                    document.getElementById('player_score').innerHTML = sum;
+                }, 3000)
+            }
+
+        }
+    });
+</script>
+{% endblock %}
