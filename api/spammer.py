@@ -13,10 +13,12 @@ from flask_login import current_user
 class Spammer:
     def __init__(self, app):
         self.app = app
-        schedule.every(15).seconds.do(self.send_emails)
+        sc = schedule.Scheduler()
+        sc.every(24).hours.do(self.send_emails)
         while True:
-            schedule.run_pending()
+            sc.run_pending()
             time.sleep(1)
+
 
 
     def send_emails(self):
@@ -26,15 +28,13 @@ class Spammer:
         self.server.login(self.address, 'hkV2AH1txBPhFh2D7nZa')
         db_sess = db_session.create_session()
         for user in db_session.create_session().query(User).filter(User.email_flag):
-            if (datetime.now() - db_sess.query(BalanceChanges).filter(BalanceChanges.user_id == user.id).order_by(BalanceChanges.date.desc()).first().date).total_seconds() > 0:
+            if (datetime.now() - db_sess.query(BalanceChanges).filter(BalanceChanges.user_id == user.id).order_by(BalanceChanges.date.desc()).first().date).total_seconds() > 172800:
                 dt = (datetime.now() - db_sess.query(BalanceChanges).filter(BalanceChanges.user_id == user.id).order_by(BalanceChanges.date.desc()).first().date).total_seconds()
                 msg = MIMEMultipart("alternative")
                 msg["Subject"] = "Not spam"
                 msg["From"] = "spammer.noreply@mail.ru"
                 with self.app.app_context():
                     html_msg = MIMEText(render_template('email.html', name=user.name, time=dt), "html")
-                    print(type(html_msg))
                     msg.attach(html_msg)
                 self.server.sendmail(self.address, user.email, msg.as_string())
-                print(2)
         self.server.quit()
