@@ -10,6 +10,8 @@ from api import user_api
 from werkzeug.utils import secure_filename
 import os
 import string
+from threading import Thread
+from api.spammer import Spammer
 import argparse
 
 app = Flask(__name__)
@@ -308,15 +310,25 @@ def main():
     if not os.path.exists("db"):
         os.mkdir("db")
     db_session.global_init("db/casino.db")
+
     if is_local:
+        thread = Thread(target=spammer_def, daemon=True)
+        thread.start()
         app.run(port=8080,
                 host='127.0.0.1',
                 debug=is_debug)
     else:
+        thread = Thread(target=spammer_def, daemon=True)
+        thread.start()
         port = int(os.environ.get("PORT", 5000))
         app.run(host='0.0.0.0',
                 port=port,
                 debug=is_debug)
+
+
+def spammer_def():
+    spammer = Spammer(app)
+
 
 
 if __name__ == '__main__':

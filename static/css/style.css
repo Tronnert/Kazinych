@@ -158,6 +158,17 @@ body {
     height: 100%;
     background-color: #525252;
 }
+
+.checkbox-green .checkbox-green-switch {
+	display: inline-block;	
+	height: 28px;
+	width: 90px;
+	box-sizing: border-box;
+	position: relative;	
+	border-radius: 2px;
+	background: #848484;
+	transition: background-color 0.3s cubic-bezier(0, 1, 0.5, 1);
+
 @import url('https://fonts.googleapis.com/css?family=Lato:400,700');
 
 #shell {
