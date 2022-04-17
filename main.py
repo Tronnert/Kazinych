@@ -178,7 +178,7 @@ def main():
 
 
 def spammer_def():
-    spammer = Spammer()
+    spammer = Spammer(app)
 
 
 
