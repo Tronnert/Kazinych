@@ -315,8 +315,6 @@ def main():
     if is_local:
         thread = Thread(target=spammer_def, daemon=True)
         thread.start()
-        clicker_thread = Thread(target=clicker_def)
-        clicker_thread.start()
         app.run(port=8080,
                 host='127.0.0.1',
                 debug=is_debug)
