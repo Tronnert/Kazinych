@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="mt-5" style="padding-top:1px;">
+<div class="container justify-content-center mt-5 border-left border-right">
+        <div id="bal_ch">
+            {% for item in logs_list %}
+            <div class="second py-2 px-2">
+                {{ item }}
+            </div>
+            {% endfor %}
+        </div>
+</div></div>
+{% endblock %}

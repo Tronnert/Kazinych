@@ -15,7 +15,9 @@
                 Flip Coin
             </button>
         </div>
+    <div id="winornotwin"></div>
     </div>
+
     <!--Script-->
 {% if not current_user.is_authenticated %}
 <script>
@@ -35,6 +37,10 @@ let game_name = 'coin_toss';
 let coin = document.querySelector(".coin");
 let flipBtn = document.querySelector("#flip-button");
 flipBtn.addEventListener("click", async () => {
+    if (window.user.balance < 5) {
+        $('#winornotwin').html('Вы бедны!');
+        return;
+    }
     j = await fetch('/api/game/', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json;charset=utf-8' },
@@ -62,10 +68,17 @@ flipBtn.addEventListener("click", async () => {
 });
 function disableButton(){
     flipBtn.disabled = true;
+    $('#winornotwin').html('Игра началась');
     setTimeout(function(){
         flipBtn.disabled = false;
         window.user.balance = window.user.balance + Number(j['win']) - Number(j['bet']);
         document.getElementById('nav_balance').innerHTML = window.user.balance;
+        if (j['choice']) {
+        $('#winornotwin').html('Вы выиграли');
+        }
+        else {
+        $('#winornotwin').html('Вы проиграли');
+        }
     },3000)
 }
   </script>

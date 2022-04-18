@@ -35,7 +35,7 @@
     $(function(){
 	(function init() {
 		$('.fuck').on('click', startGame);
-		$('.fuck2').on('click', startGame);
+		$('.fuck2').on('click', startGame2);
 	})();
 
 	 async function startGame(event) {
@@ -48,7 +48,7 @@
                 $('#first').attr("src", "{{ url_for('static', filename='img/map.png') }}?" + Math.random());
         });
     }
-    async function startGame(event) {
+    async function startGame2(event) {
 	    let current = $(event.currentTarget);
 	    await fetch('/api/move1/', {
                     method: 'POST',
