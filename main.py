@@ -11,6 +11,7 @@ from werkzeug.utils import secure_filename
 import os
 import string
 import argparse
+import logging
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
@@ -123,9 +124,11 @@ def login():
     if form.validate_on_submit():
         db_sess = db_session.create_session()
         user = db_sess.query(User).filter(User.email == form.email.data).first()
+
         if user and user.check_password(form.password.data):
             login_user(user,
                        remember=form.remember_me.data)
+            user_logger.info(f"Юзер {user.name} с почтой {user.email} и айди {user.id} залогинился")
             return redirect("/")
         return render_template('login.html',
                                message="Неправильный логин или пароль",
@@ -204,6 +207,8 @@ def make_map1_image():
 
 @app.route('/about')
 def about():
+    make_map_image()
+    make_map1_image()
     return render_template('about.html',
                            title='О нас')
 
@@ -215,6 +220,7 @@ def about():
 
 
 @app.route('/profile', methods=['GET', 'POST'])
+@login_required
 def profile():
     form = UploadForm()
     mes = ""
@@ -290,6 +296,45 @@ def shell_game():
                            title='Наперстки')
 
 
+@app.route('/admin_logs')
+@login_required
+def admin_logs():
+    if current_user.email == "admin@admin":
+        with open("user.log") as file:
+            logs = list(map(str.strip, file.readlines()))
+        return render_template('admin_logs.html',
+                               title='admin_logs',
+                               logs_list=logs)
+    else:
+        return {"error": 404}
+
+
+# @app.route('/admin_users')
+# @login_required
+# def admin_logs():
+#     if current_user.email == "admin@admin":
+#         db_sess = db_session.create_session()
+#         users = db_sess.query()
+#         return render_template('admin_logs.html',
+#                                title='admin_logs',
+#                                logs_list=logs)
+#     else:
+#         return {"error": 404}
+#
+#
+# @app.route('/admin_bal_ch')
+# @login_required
+# def admin_logs():
+#     if current_user.email == "admin@admin":
+#         with open("user.log") as file:
+#             logs = list(map(str.strip, file.readlines()))
+#         return render_template('admin_logs.html',
+#                                title='admin_logs',
+#                                logs_list=logs)
+#     else:
+#         return {"error": 404}
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--local",
@@ -305,15 +350,34 @@ def main():
     is_debug = args.debug
     make_map_image()
     make_map1_image()
+    formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
+    handler = logging.FileHandler("user.log", mode='w')
+    handler.setFormatter(formatter)
+    global user_logger
+    user_logger = logging.getLogger("usr_logger")
+    user_logger.setLevel(logging.INFO)
+    user_logger.addHandler(handler)
+    add_admin = False
     if not os.path.exists("db"):
         os.mkdir("db")
+        add_admin = True
     db_session.global_init("db/casino.db")
+    if add_admin:
+        db_sess = db_session.create_session()
+        user = User(
+            name="admin",
+            email="admin@admin",
+            about="admin"
+        )
+        user.set_password("admin_1234_admin")
+        db_sess.add(user)
+        db_sess.commit()
     if is_local:
         app.run(port=8080,
                 host='127.0.0.1',
                 debug=is_debug)
     else:
-        port = int(os.environ.get("PORT", 5000))
+        port = int(os.environ.get("PORT", 8080))
         app.run(host='0.0.0.0',
                 port=port,
                 debug=is_debug)
