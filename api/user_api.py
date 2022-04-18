@@ -82,6 +82,9 @@ def cheat_balance_update():
                               user=current_user)
     current_user.balance_changes_rel.append(new_note)
     db_sess.commit()
+    return jsonify({'success': 'ok',
+                    'date': str(datetime.datetime.now().strftime("%H:%M %d.%m.%y"))})
+
 
 @blueprint.route('/api/emailsettings', methods=['POST', 'GET'])
 def emailsettings():

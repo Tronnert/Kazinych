@@ -35,7 +35,6 @@ server.login(address, 'hkV2AH1txBPhFh2D7nZa')
 IS_LOCAL = ''
 
 
-
 def check_email(email):
     a = email.split('@')
     if len(a) < 2:
@@ -112,9 +111,9 @@ def reqister():
                                    message=mes)
         db_sess = db_session.create_session()
         if (db_sess.query(User).filter(User.email == form.email.data).first() and \
-                db_sess.query(User).filter(User.name == form.name.data).first()) or \
-            (db_sess.query(Not_Verificated).filter(Not_Verificated.email == form.email.data).first() and \
-            db_sess.query(Not_Verificated).filter(Not_Verificated.name == form.name.data).first()):
+            db_sess.query(User).filter(User.name == form.name.data).first()) or \
+                (db_sess.query(Not_Verificated).filter(Not_Verificated.email == form.email.data).first() and \
+                 db_sess.query(Not_Verificated).filter(Not_Verificated.name == form.name.data).first()):
             return render_template('register.html',
                                    title='Регистрация',
                                    form=form,
@@ -127,7 +126,7 @@ def reqister():
         user.set_password(form.password.data)
         db_sess.add(user)
         db_sess.commit()
-        #login_user(user, remember=form.remember_me.data)
+        # login_user(user, remember=form.remember_me.data)
         msg = MIMEMultipart("alternative")
         msg["Subject"] = "Not spam"
         msg["From"] = "spammer.noreply@mail.ru"
@@ -143,6 +142,7 @@ def reqister():
                            title='Регистрация',
                            form=form)
 
+
 @app.route('/emailverification/<id>')
 def email_verification(id):
     db_sess = db_session.create_session()
@@ -156,6 +156,8 @@ def email_verification(id):
     )
     db_sess.add(user)
     db_sess.commit()
+    login_user(user,
+               remember=False)
     return redirect('/')
 
 
@@ -350,17 +352,28 @@ def admin_logs():
         return {"error": 404}
 
 
-# @app.route('/admin_users')
-# @login_required
-# def admin_logs():
-#     if current_user.email == "admin@admin":
-#         db_sess = db_session.create_session()
-#         users = db_sess.query()
-#         return render_template('admin_logs.html',
-#                                title='admin_logs',
-#                                logs_list=logs)
-#     else:
-#         return {"error": 404}
+@app.route('/admin_users')
+@login_required
+def admin_users():
+    if current_user.email == "admin@admin":
+        db_sess = db_session.create_session()
+        users = [['id', 'name', 'about',
+                  'email', 'hashed_password', 'created_date',
+                  'balance', 'image']] + [[e.to_dict(only=('id', 'name', 'about',
+                                                           'email', 'hashed_password', 'created_date',
+                                                           'balance', 'image'))[j] for j in ('id', 'name', 'about',
+                                                                                             'email', 'hashed_password',
+                                                                                             'created_date',
+                                                                                             'balance', 'image')] for e
+                                          in
+                                          db_sess.query(User).all()]
+        return render_template('admin_logs.html',
+                               title='admin_logs',
+                               logs_list=users)
+    else:
+        return {"error": 404}
+
+
 #
 #
 # @app.route('/admin_bal_ch')
@@ -434,11 +447,10 @@ def main():
 def spammer_def():
     spammer = Spammer(app)
 
+
 def clicker_def():
     clicker = Clicker()
 
 
-
 if __name__ == '__main__':
     main()
-
