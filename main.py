@@ -132,8 +132,6 @@ def reqister():
         msg["From"] = "spammer.noreply@mail.ru"
         if IS_LOCAL:
             adr = '127.0.0.1:8080'
-        elif True:
-            adr = '192.168.1.191:5000'
         else:
             adr = 'kazinych.herokuapp.com'
         html_msg = MIMEText(render_template('email_verification.html', name=user.name, id=user.id, adr=adr), "html")
