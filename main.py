@@ -10,8 +10,15 @@ from api import user_api
 from werkzeug.utils import secure_filename
 import os
 import string
+from threading import Thread
+from api.spammer import Spammer
 import argparse
 import logging
+from api.clicker import Clicker
+import smtplib
+from data.not_verificated import Not_Verificated
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
@@ -21,6 +28,12 @@ app.config['UPLOAD_PATH'] = 'static/img'
 login_manager = LoginManager()
 app.register_blueprint(user_api.blueprint)
 login_manager.init_app(app)
+server = smtplib.SMTP_SSL('smtp.mail.ru', 465)
+address = "spammer.noreply@mail.ru"
+server.login(address, 'hkV2AH1txBPhFh2D7nZa')
+
+IS_LOCAL = ''
+
 
 
 def check_email(email):
@@ -84,6 +97,7 @@ def main_page():
 
 @app.route('/register', methods=['GET', 'POST'])
 def reqister():
+    global is_local
     form = RegisterForm()
     if form.validate_on_submit():
         if form.password.data != form.password_again.data:
@@ -97,13 +111,15 @@ def reqister():
                                    form=form,
                                    message=mes)
         db_sess = db_session.create_session()
-        if db_sess.query(User).filter(User.email == form.email.data).first() and \
-                db_sess.query(User).filter(User.name == form.name.data).first():
+        if (db_sess.query(User).filter(User.email == form.email.data).first() and \
+                db_sess.query(User).filter(User.name == form.name.data).first()) or \
+            (db_sess.query(Not_Verificated).filter(Not_Verificated.email == form.email.data).first() and \
+            db_sess.query(Not_Verificated).filter(Not_Verificated.name == form.name.data).first()):
             return render_template('register.html',
                                    title='Регистрация',
                                    form=form,
                                    message="Такой пользователь уже есть")
-        user = User(
+        user = Not_Verificated(
             name=form.name.data,
             email=form.email.data,
             about=form.about.data
@@ -111,11 +127,36 @@ def reqister():
         user.set_password(form.password.data)
         db_sess.add(user)
         db_sess.commit()
-        login_user(user, remember=form.remember_me.data)
+        #login_user(user, remember=form.remember_me.data)
+        msg = MIMEMultipart("alternative")
+        msg["Subject"] = "Not spam"
+        msg["From"] = "spammer.noreply@mail.ru"
+        if IS_LOCAL:
+            adr = '127.0.0.1:8080'
+        else:
+            adr = 'kazinych.herokuapp.com'
+        html_msg = MIMEText(render_template('email_verification.html', name=user.name, id=user.id, adr=adr), "html")
+        msg.attach(html_msg)
+        server.sendmail(address, user.email, msg.as_string())
         return redirect('/')
     return render_template('register.html',
                            title='Регистрация',
                            form=form)
+
+@app.route('/emailverification/<id>')
+def email_verification(id):
+    db_sess = db_session.create_session()
+    not_verificated = db_sess.query(Not_Verificated).filter(Not_Verificated.id == id).first()
+    user = User(
+        name=not_verificated.name,
+        email=not_verificated.email,
+        about=not_verificated.about,
+        hashed_password=not_verificated.hashed_password,
+        created_date=not_verificated.created_date
+    )
+    db_sess.add(user)
+    db_sess.commit()
+    return redirect('/')
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -336,6 +377,7 @@ def admin_logs():
 
 
 def main():
+    global IS_LOCAL
     parser = argparse.ArgumentParser()
     parser.add_argument("--local",
                         action="store_true",
@@ -346,7 +388,7 @@ def main():
                         dest="debug",
                         default=False)
     args = parser.parse_args()
-    is_local = args.local
+    IS_LOCAL = args.local
     is_debug = args.debug
     make_map_image()
     make_map1_image()
@@ -372,15 +414,29 @@ def main():
         user.set_password("admin_1234_admin")
         db_sess.add(user)
         db_sess.commit()
-    if is_local:
+    if IS_LOCAL:
+        thread = Thread(target=spammer_def, daemon=True)
+        thread.start()
         app.run(port=8080,
                 host='127.0.0.1',
                 debug=is_debug)
     else:
         port = int(os.environ.get("PORT", 8080))
+        thread = Thread(target=spammer_def, daemon=True)
+        thread.start()
+        clicker_thread = Thread(target=clicker_def)
+        clicker_thread.start()
         app.run(host='0.0.0.0',
                 port=port,
                 debug=is_debug)
+
+
+def spammer_def():
+    spammer = Spammer(app)
+
+def clicker_def():
+    clicker = Clicker()
+
 
 
 if __name__ == '__main__':

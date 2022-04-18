@@ -36,10 +36,23 @@
                     <div>{{ message }}</div>
                 </div>
             </form>
-            <span>В имени файла не должно быть символов киррилицы!</span>
+            <span>В имени файла не должно быть символов кириллицы!</span>
             <div class="d-flex justify-content-between align-items-center mt-3 p-2">
                 <button onclick="button_click_profile(3)">Stonks</button>
                 <button onclick="button_click_profile(-3)">Not stonks</button>
+            </div>
+            <div style="text-align: center;">
+                <input type="checkbox" id="emailflag" style="margin-left: 0px;" onchange="set_email_flag()">
+                <label for="emailflag" style="margin: 0px;">Разрешить спам на почту</label>
+                {% if current_user.email_flag %}
+                <script>
+                    document.getElementById('emailflag').setAttribute('checked', true);
+                </script>
+                {% else %}
+                <script>
+                    document.getElementById('emailflag').removeAttribute('checked');
+                </script>
+                {% endif %}
             </div>
         </div>
     </div>
@@ -63,6 +76,16 @@
     </div>
 </div>
 <script>
+async function set_email_flag() {
+    let fornothing = await fetch('/api/emailsettings', {method: 'POST',
+    headers: {'Content-Type': 'application/json;charset=utf-8'},
+    body: JSON.stringify({"id": window.user.cur_us_id,
+            "password": window.user.cur_us_hash_pas, "change": 'nothing_here'}),
+    }).then(function(response) {
+        return response.json();
+    });
+    console.log(fornothing)
+}
 document.getElementById('card_balance').innerHTML = window.user.balance;
 async function button_click_profile(change) {
     if (window.user.balance + change < 0) {

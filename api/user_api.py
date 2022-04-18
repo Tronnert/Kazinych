@@ -82,5 +82,22 @@ def cheat_balance_update():
                               user=current_user)
     current_user.balance_changes_rel.append(new_note)
     db_sess.commit()
-    return jsonify({'success': 'ok',
-                    'date': str(datetime.datetime.now().strftime("%H:%M %d.%m.%y"))})
+
+@blueprint.route('/api/emailsettings', methods=['POST', 'GET'])
+def emailsettings():
+    if not request.json:
+        return jsonify({'error': 'Empty request'})
+    elif not all(key in request.json for key in
+                 ['id', 'password', 'change']):
+        return jsonify({'error': 'Bad request'})
+    db_sess = db_session.create_session()
+    current_user = db_sess.query(User).filter(User.id == request.json['id']).first()
+    if current_user.hashed_password != request.json['password']:
+        return jsonify({'error': 'Wrong password'})
+    if current_user.email_flag:
+        current_user.email_flag = False
+    else:
+        current_user.email_flag = True
+    print(current_user.email_flag)
+    db_sess.commit()
+    return jsonify({'success': 'ok', 'date': str(datetime.datetime.now().strftime("%H:%M %d.%m.%y"))})
