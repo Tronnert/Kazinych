@@ -17,6 +17,7 @@ import logging
 from api.clicker import Clicker
 import smtplib
 from data.not_verificated import Not_Verificated
+from data.balance_changes import BalanceChanges
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
@@ -377,19 +378,43 @@ def admin_users():
         return {"error": 404}
 
 
-#
-#
-# @app.route('/admin_bal_ch')
-# @login_required
-# def admin_logs():
-#     if current_user.email == "admin@admin":
-#         with open("user.log") as file:
-#             logs = list(map(str.strip, file.readlines()))
-#         return render_template('admin_logs.html',
-#                                title='admin_logs',
-#                                logs_list=logs)
-#     else:
-#         return {"error": 404}
+@app.route('/admin_not_vr')
+@login_required
+def admin_not_vr():
+    if current_user.email == "admin@admin":
+        db_sess = db_session.create_session()
+        users = [['id', 'name', 'about',
+                  'email', 'hashed_password', 'created_date']] + [[e.to_dict(only=('id', 'name', 'about',
+                                                           'email', 'hashed_password', 'created_date',
+                                                           ))[j] for j in ('id', 'name', 'about',
+                                                                                             'email', 'hashed_password',
+                                                                                             'created_date',
+                                                                                             )] for e
+                                          in
+                                          db_sess.query(Not_Verificated).all()]
+        return render_template('admin_logs.html',
+                               title='admin_not_vr',
+                               logs_list=users)
+    else:
+        return {"error": 404}
+
+
+@app.route('/admin_bal_ch')
+@login_required
+def admin_bal_ch():
+    if current_user.email == "admin@admin":
+        db_sess = db_session.create_session()
+        users = [['id', 'game_name', 'content',
+                  'date', 'change', 'user_id']] + [[e.to_dict(only=('id', 'game_name', 'content',
+                  'date', 'change', 'user_id'))[j] for j in ('id', 'game_name', 'content',
+                  'date', 'change', 'user_id')] for e
+                                          in
+                                          db_sess.query(BalanceChanges).all()]
+        return render_template('admin_logs.html',
+                               title='admin_bal_ch',
+                               logs_list=users)
+    else:
+        return {"error": 404}
 
 
 def main():
@@ -409,7 +434,8 @@ def main():
     make_map_image()
     make_map1_image()
     formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
-    handler = logging.FileHandler("user.log", mode='w')
+    handler = logging.FileHandler("user.log",
+                                  mode='w')
     handler.setFormatter(formatter)
     global user_logger
     user_logger = logging.getLogger("usr_logger")

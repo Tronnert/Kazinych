@@ -140,6 +140,8 @@
                 count1 = 0;
                 sum = 0;
                 sum1 = 0;
+                document.getElementById('casino_score').innerHTML = sum1;
+                document.getElementById('player_score').innerHTML = sum;
                 pl = true;
                 mCasino1.randomize = function randomize() { return Number(j['choice'][0][count]) - 1; }
                 mCasino1.shuffle(3);

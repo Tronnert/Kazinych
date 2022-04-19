@@ -2,6 +2,7 @@ import requests
 import schedule
 import time
 
+
 class Clicker:
     def __init__(self):
         sc = schedule.Scheduler()
@@ -11,5 +12,5 @@ class Clicker:
             time.sleep(1)
 
     def do(self):
-        print(2)
+        # print(2)
         a = requests.get('http://kazinych.herokuapp.com')
