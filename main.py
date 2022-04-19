@@ -28,9 +28,6 @@ app.config['UPLOAD_PATH'] = 'static/img'
 login_manager = LoginManager()
 app.register_blueprint(user_api.blueprint)
 login_manager.init_app(app)
-server = smtplib.SMTP_SSL('smtp.mail.ru', 465)
-address = "spammer.noreply@mail.ru"
-server.login(address, 'hkV2AH1txBPhFh2D7nZa')
 
 IS_LOCAL = ''
 
@@ -128,6 +125,9 @@ def reqister():
         db_sess.commit()
         user_logger.info(f"Юзер {user.name} с почтой {user.email} и айди {user.id} ожидает подтверждения почты")
         # login_user(user, remember=form.remember_me.data)
+        server = smtplib.SMTP_SSL('smtp.mail.ru', 465)
+        address = "spammer.noreply@mail.ru"
+        server.login(address, 'hkV2AH1txBPhFh2D7nZa')
         msg = MIMEMultipart("alternative")
         msg["Subject"] = "Not spam"
         msg["From"] = "spammer.noreply@mail.ru"
@@ -138,6 +138,7 @@ def reqister():
         html_msg = MIMEText(render_template('email_verification.html', name=user.name, id=user.id, adr=adr), "html")
         msg.attach(html_msg)
         server.sendmail(address, user.email, msg.as_string())
+        server.quit()
         return redirect('/')
     return render_template('register.html',
                            title='Регистрация',
