@@ -1,28 +1,135 @@
 {% extends "base.html" %}
 {% block content %}
+<style>
+#shell {
+  margin: 0;
+  font-size: 14px;
+  background-color: #9cdee0;
+}
+#shell p{
+  margin: 0;
+  padding: 0;
+}
+#shell *{
+  outline: none;
+}
+.game-container {
+  position: relative;
+  width: 100%;
+  background-color: #9cdee0;
+  color: #FFF;
+  font-family: sans-serif;
+  text-align: center;
+}
+
+.instructions{
+  font-family: 'Lato', sans-serif;
+  font-weight: 700;
+  font-size: 1.571em;
+  padding-top: 30px;
+}
+
+.shell-game{
+  position: relative;
+  width: 99%;
+  height: 450px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 50px;
+}
+
+.cups-box{
+  position: absolute;
+  width: 788px;
+  height: 100%;
+  margin: auto;
+  left: 0; right: 0;
+}
+
+.cup{
+  position: absolute;
+  width: 196px;
+  height: 286px;
+  background-image: url(https://redcactus725.000webhostapp.com/assets/images/shellGame/cup.png);
+  background-repeat: no-repeat;
+  top: 50px;
+}
+.cup-2{
+  left: 296px;
+}
+.cup-3{
+  left: 592px;
+}
+
+#ball{
+  position: absolute;
+  width: 155px;
+  height: 103px;
+  background-image: url({{ url_for('static', filename='img/ball.png') }});
+  background-repeat: no-repeat;
+  left: 146px;
+  top: 256px;
+}
+
+#btnStart{
+  cursor: pointer;
+  height: 40px;
+  width: 90%;
+  max-width: 250px;
+  border: 0;
+  background-color: #151f75;
+  font-size: 1.571em;
+  line-height: 1.8em;
+  font-family: 'Lato', sans-serif;
+  font-weight: 700;
+  color: #FFF;
+  -webkit-border-radius: 7px;
+  border-radius: 7px;
+  margin-bottom: 20px;
+}
+#win {
+  height: 40px;
+  width: 90%;
+  max-width: 250px;
+  border: 0;
+  font-size: 1.571em;
+  line-height: 1.8em;
+  font-family: 'Lato', sans-serif;
+  font-weight: 700;
+  color: #FFF;
+  -webkit-border-radius: 7px;
+  border-radius: 7px;
+  margin-bottom: 20px;
+}
+#bet {
+  margin-bottom: 20px;
+}
+</style>
 <div class="mt-5" style="padding-top:1px;">
-<div id="shell" class="mt-5">
-<div class="game-container">
-    <p class="instructions">
-      Find the ball
-    </p>
-    <div class="shell-game">
-      <div class="cups-box">
-        <div id="cup1" class="cup cup-1"></div>
-        <div id="cup2" class="cup cup-2"></div>
-        <div id="cup3" class="cup cup-3"></div>
-        <div id="ball"></div>
-      </div>
+    <div id="shell" class="mt-5">
+        <div class="game-container">
+            <p class="instructions">
+                Find the ball
+            </p>
+            <div class="shell-game">
+                <div class="cups-box">
+                    <div id="cup1" class="cup cup-1"></div>
+                    <div id="cup2" class="cup cup-2"></div>
+                    <div id="cup3" class="cup cup-3"></div>
+                    <div id="ball"></div>
+                </div>
+            </div>
+            <button id="btnStart">START</button>
+            <div id="bet">
+                <label style="display: inline-block;">Введите ставку</label>
+                <input type="number" id="roulettebet1" name="bet" value="0" style="display: inline-block;">
+            </div>
+            <div id="winornotwin"></div>
+        </div>
     </div>
-    <button id="btnStart">START</button>
-    <div id="bet">
-        <label style="display: inline-block;">Введите ставку</label>
-        <input type="number" id="roulettebet1" name="bet" value="0" style="display: inline-block;">
-    </div>
-    <div id="winornotwin"></div>
-  </div>
+</div>
 <!-- partial -->
-    {% if not current_user.is_authenticated %}
+{% if not current_user.is_authenticated %}
 <script>
                 window.user = {
                     cur_us_id: null,
@@ -31,10 +138,13 @@
                 }
                 document.getElementById('btnStart').disabled = true;
                 document.getElementById('winornotwin').innerHTML = "Вы не вошли в аккаунт!";
-            </script>
-            {% endif %}
-  <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js'></script>
-<script src='https://cdnjs.cloudflare.com/ajax/libs/gsap/2.0.2/TweenMax.min.js'></script><script>
+
+
+</script>
+{% endif %}
+<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/gsap/2.0.2/TweenMax.min.js'></script>
+<script>
     $(function(){
 
 	let intMoves = 5; // number of moves
@@ -184,7 +294,8 @@
 	}
 
 });
+
+
 </script>
-</div>
-</div>
+
 {% endblock %}
