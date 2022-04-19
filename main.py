@@ -110,9 +110,9 @@ def reqister():
                                    form=form,
                                    message=mes)
         db_sess = db_session.create_session()
-        if (db_sess.query(User).filter(User.email == form.email.data).first() and \
+        if (db_sess.query(User).filter(User.email == form.email.data).first() or
             db_sess.query(User).filter(User.name == form.name.data).first()) or \
-                (db_sess.query(Not_Verificated).filter(Not_Verificated.email == form.email.data).first() and \
+                (db_sess.query(Not_Verificated).filter(Not_Verificated.email == form.email.data).first() or
                  db_sess.query(Not_Verificated).filter(Not_Verificated.name == form.name.data).first()):
             return render_template('register.html',
                                    title='Регистрация',
@@ -126,6 +126,7 @@ def reqister():
         user.set_password(form.password.data)
         db_sess.add(user)
         db_sess.commit()
+        user_logger.info(f"Юзер {user.name} с почтой {user.email} и айди {user.id} ожидает подтверждения почты")
         # login_user(user, remember=form.remember_me.data)
         msg = MIMEMultipart("alternative")
         msg["Subject"] = "Not spam"
@@ -158,6 +159,7 @@ def email_verification(id):
     db_sess.commit()
     login_user(user,
                remember=False)
+    user_logger.info(f"Юзер {user.name} с почтой {user.email} и айди {user.id} зарегестрировался")
     return redirect('/')
 
 

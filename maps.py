@@ -287,7 +287,7 @@ class Example1:
         return y
 
     def get_k(self):
-        return 2 ** (8 + self.z) / self.r_major / math.pi
+          return 2 ** (8 + self.z) / self.r_major / math.pi
 
 
 maps_dict = {'map': Example(),
